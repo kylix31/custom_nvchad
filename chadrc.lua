@@ -34,6 +34,12 @@ M.plugins = {
          autotag = { enable = true },
       },
    },
+
+   options = {
+      lspconfig = {
+         setup_lspconf = "custom.plugins.lspconfig",
+      },
+   },
 }
 
 M.mappings = require "custom.mappings"
