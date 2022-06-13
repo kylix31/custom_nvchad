@@ -17,4 +17,10 @@ M.json = {
    },
 }
 
+M.search = {
+   n = {
+      ["<Esc>"] = { ":noh <CR>", "cancel highlights" },
+   },
+}
+
 return M
