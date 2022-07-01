@@ -33,4 +33,6 @@ return {
          require("pretty-fold.preview").setup()
       end,
    },
+
+   ["metakirby5/codi.vim"] = {},
 }
