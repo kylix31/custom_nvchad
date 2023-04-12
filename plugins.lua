@@ -159,14 +159,13 @@ local plugins = {
 
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
-    ft = { "typescriptreact", "javascriptreact" },
+    lazy = false,
     config = function()
-      require("nvim-treesitter.configs").setup {
-        context_commentstring = {
-          enable = true,
-        },
+      require("Comment").setup {
+        pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
       }
     end,
+    dependencies = { "numToStr/Comment.nvim" },
   },
 
   -- To make a plugin not be loaded
