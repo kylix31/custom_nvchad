@@ -82,6 +82,7 @@ local plugins = {
 
   {
     "windwp/nvim-ts-autotag",
+    ft = { "typescriptreact", "javascriptreact" },
     config = function()
       require("nvim-ts-autotag").setup()
     end,
@@ -158,7 +159,7 @@ local plugins = {
 
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
-    ft = {"typescriptreact", "javascriptreact"},
+    ft = { "typescriptreact", "javascriptreact" },
     config = function()
       require("nvim-treesitter.configs").setup {
         context_commentstring = {
