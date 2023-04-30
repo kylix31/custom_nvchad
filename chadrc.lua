@@ -17,7 +17,6 @@ M.plugins = "custom.plugins"
 -- check core.mappings for table structure
 M.mappings = require "custom.mappings"
 
-vim.opt.relativenumber = true
-vim.opt.scrolloff = 8
+M.options = require "custom.configs.options"
 
 return M

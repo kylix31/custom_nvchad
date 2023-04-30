@@ -102,6 +102,7 @@ local plugins = {
 
   {
     "stevearc/aerial.nvim",
+    ft = { "javascript", "typescript" },
     config = function()
       require("aerial").setup()
     end,
@@ -151,7 +152,7 @@ local plugins = {
       {
         "theHamsta/nvim-dap-virtual-text",
         config = function()
-          require("custom.configs.nvim-dap").dap_virtual_text()
+          require("nvim-dap-virtual-text").setup()
         end,
       },
     },
@@ -173,6 +174,53 @@ local plugins = {
   --   "NvChad/nvim-colorizer.lua",
   --   enabled = false
   -- },
+
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup {
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = "<M-l>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-]>",
+          },
+        },
+      }
+    end,
+  },
+
+  {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua" },
+    config = function()
+      require("copilot_cmp").setup()
+    end,
+    event = "InsertEnter",
+    dependencies = {
+      {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        config = function()
+          require("copilot").setup { suggestion = { enabled = false }, panel = { enabled = false } }
+        end,
+      },
+    },
+  },
+
+  -- override cmp default config sources
+  {
+    "hrsh7th/nvim-cmp",
+    opts = overrides.cmp,
+  },
 }
 
 return plugins
