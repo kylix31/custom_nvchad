@@ -33,13 +33,12 @@ end
 
 local b = null_ls.builtins
 
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
 local sources = {
 
   -- webdev stuff
   -- b.formatting.deno_fmt, -- choosed deno for ts/js files cuz its very fast!
-  b.formatting.prettier, -- so prettier works only on these filetypes
+  b.formatting.prettier,
+
   b.formatting.eslint_d,
 
   -- Lua
