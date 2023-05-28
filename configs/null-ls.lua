@@ -41,11 +41,24 @@ local sources = {
 
   b.formatting.eslint_d,
 
+  b.formatting.black,
+  b.formatting.isort,
+
   -- Lua
   b.formatting.stylua,
 
   -- cpp
   b.formatting.clang_format,
+
+  b.formatting.sqlfluff.with {
+    extra_args = { "--dialect", "mysql" }, -- change to your dialect
+  },
+
+  b.diagnostics.pylint.with {
+    diagnostics_postprocess = function(diagnostic)
+      diagnostic.code = diagnostic.message_id
+    end,
+  },
 }
 
 null_ls.setup {

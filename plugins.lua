@@ -175,55 +175,56 @@ local plugins = {
   --   enabled = false
   -- },
 
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup {
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          debounce = 75,
-          keymap = {
-            accept = "<M-l>",
-            accept_word = false,
-            accept_line = false,
-            next = "<M-]>",
-            prev = "<M-[>",
-            dismiss = "<C-]>",
-          },
-        },
-      }
-    end,
-  },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   cmd = "Copilot",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("copilot").setup {
+  --       suggestion = {
+  --         enabled = true,
+  --         auto_trigger = true,
+  --         debounce = 75,
+  --         keymap = {
+  --           accept = "<M-l>",
+  --           accept_word = false,
+  --           accept_line = false,
+  --           next = "<M-]>",
+  --           prev = "<M-[>",
+  --           dismiss = "<C-]>",
+  --         },
+  --       },
+  --     }
+  --   end,
+  -- },
 
-  {
-    "zbirenbaum/copilot-cmp",
-    config = function()
-      -- require("copilot_cmp").setup { opts = { event = nil } }
-      require("copilot_cmp").setup {}
-    end,
-    event = "InsertEnter",
-    dependencies = {
-      {
-        "zbirenbaum/copilot.lua",
-        cmd = "Copilot",
-        config = function()
-          require("copilot").setup { suggestion = { enabled = false }, panel = { enabled = false } }
-        end,
-      },
-    },
-  },
+  -- {
+  --   "zbirenbaum/copilot-cmp",
+  --   config = function()
+  --     -- require("copilot_cmp").setup { opts = { event = nil } }
+  --     require("copilot_cmp").setup {}
+  --   end,
+  --   event = "InsertEnter",
+  --   dependencies = {
+  --     {
+  --       "zbirenbaum/copilot.lua",
+  --       cmd = "Copilot",
+  --       config = function()
+  --         require("copilot").setup { suggestion = { enabled = false }, panel = { enabled = false } }
+  --       end,
+  --     },
+  --   },
+  -- },
 
   {
     "kevinhwang91/nvim-ufo",
     dependencies = { "kevinhwang91/promise-async" },
     config = function()
       vim.o.foldcolumn = "1" -- '0' is not bad
-      vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
+      vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
+      vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
       -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
       vim.keymap.set("n", "zR", require("ufo").openAllFolds)
@@ -232,9 +233,21 @@ local plugins = {
   },
 
   -- override cmp default config sources
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   opts = overrides.cmp,
+  -- },
   {
-    "hrsh7th/nvim-cmp",
-    opts = overrides.cmp,
+    "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("chatgpt").setup {}
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
   },
 }
 
