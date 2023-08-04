@@ -60,4 +60,13 @@ M.dap = {
   },
 }
 
+M.custom_telescope = {
+  n = {
+    ["<leader>fv"] = {
+      ":Telescope file_browser path=%:p:h select_buffer=true <CR>",
+      "telescope file_browser",
+    },
+  },
+}
+
 return M

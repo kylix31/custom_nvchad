@@ -241,7 +241,7 @@ local plugins = {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
     config = function()
-      require("chatgpt").setup {}
+      require("chatgpt").setup(require("custom.configs.chatpgt").config)
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
@@ -249,6 +249,27 @@ local plugins = {
       "nvim-telescope/telescope.nvim",
     },
   },
+  {
+    "mfussenegger/nvim-jdtls",
+    ft = { "java" },
+  },
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    lazy = false,
+    config = function()
+      require("telescope").load_extension "file_browser"
+    end,
+  },
+  -- {
+  --   "utilyre/barbecue.nvim",
+  --   name = "barbecue",
+  --   lazy = false,
+  --   version = "*",
+  --   dependencies = {
+  --     "SmiteshP/nvim-navic",
+  --     "nvim-tree/nvim-web-devicons", -- optional dependency
+  --   },
+  -- },
 }
 
 return plugins

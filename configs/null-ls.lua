@@ -50,6 +50,10 @@ local sources = {
   -- cpp
   b.formatting.clang_format,
 
+  b.formatting.phpcsfixer,
+
+  b.formatting.google_java_format,
+
   b.formatting.sqlfluff.with {
     extra_args = { "--dialect", "mysql" }, -- change to your dialect
   },
