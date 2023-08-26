@@ -16,6 +16,7 @@ local servers = {
   "phpactor",
   "yamlls",
   "jdtls",
+  "lemminx",
 }
 
 capabilities.textDocument.foldingRange = {
