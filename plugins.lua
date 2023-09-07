@@ -82,14 +82,10 @@ local plugins = {
 
   {
     "windwp/nvim-ts-autotag",
-    ft = { "typescriptreact", "javascriptreact" },
-    config = function()
-      require("nvim-ts-autotag").setup()
-    end,
-  },
-
-  {
-    "mrjones2014/nvim-ts-rainbow",
+    ft = { "typescriptreact", "javascriptreact", "markdown", "html", "php" },
+    -- config = function()
+    --   require("nvim-ts-autotag").setup()
+    -- end,
   },
 
   {
@@ -126,12 +122,12 @@ local plugins = {
   },
 
   {
-    "tpope/vim-surround",
-
-    -- make sure to change the value of `timeoutlen` if it's not triggering correctly, see https://github.com/tpope/vim-surround/issues/117
-    -- setup = function()
-    --  vim.o.timeoutlen = 500
-    -- end
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup()
+    end,
   },
 
   {
@@ -227,8 +223,8 @@ local plugins = {
       vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
       -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-      vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-      vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+      -- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+      -- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
     end,
   },
 

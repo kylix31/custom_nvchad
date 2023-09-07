@@ -17,6 +17,7 @@ local servers = {
   "yamlls",
   "jdtls",
   "lemminx",
+  "sqlls",
 }
 
 capabilities.textDocument.foldingRange = {
