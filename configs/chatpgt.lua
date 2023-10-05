@@ -1,6 +1,6 @@
-local M = {}
+local chatgpt = require "chatgpt"
 
-M.config = {
+chatgpt.setup {
   openai_params = {
     model = "gpt-3.5-turbo",
     frequency_penalty = 0,
@@ -38,5 +38,3 @@ M.config = {
     },
   },
 }
-
-return M

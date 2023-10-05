@@ -1,5 +1,6 @@
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
+local navic = require "nvim-navic"
 
 local lspconfig = require "lspconfig"
 
@@ -18,12 +19,23 @@ local servers = {
   "jdtls",
   "lemminx",
   "sqlls",
+  "terraform_lsp",
+  "prismals",
+  "bashls",
 }
 
-capabilities.textDocument.foldingRange = {
-  dynamicRegistration = false,
-  lineFoldingOnly = true,
-}
+-- capabilities.textDocument.foldingRange = {
+--   dynamicRegistration = false,
+--   lineFoldingOnly = true,
+-- }
+
+local custom_on_attach = function(client, bufnr)
+  if client.server_capabilities["documentSymbolProvider"] then
+    navic.attach(client, bufnr)
+  end
+
+  on_attach(client, bufnr)
+end
 
 for _, lsp in ipairs(servers) do
   if lsp == "html" then
@@ -36,12 +48,11 @@ for _, lsp in ipairs(servers) do
     }
   else
     lspconfig[lsp].setup {
-      on_attach = on_attach,
+      on_attach = custom_on_attach,
       capabilities = capabilities,
     }
   end
 end
 
-require("ufo").setup()
 --
 -- lspconfig.pyright.setup { blabla}

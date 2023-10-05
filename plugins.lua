@@ -98,7 +98,7 @@ local plugins = {
 
   {
     "stevearc/aerial.nvim",
-    ft = { "javascript", "typescript" },
+    ft = { "javascript", "typescript", "php" },
     config = function()
       require("aerial").setup()
     end,
@@ -214,17 +214,10 @@ local plugins = {
 
   {
     "kevinhwang91/nvim-ufo",
+    event = "VeryLazy",
     dependencies = { "kevinhwang91/promise-async" },
     config = function()
-      vim.o.foldcolumn = "1" -- '0' is not bad
-      vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-      vim.o.foldlevelstart = 99
-      vim.o.foldenable = true
-      vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
-
-      -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-      -- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-      -- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+      require "custom.configs.nvim-ufo"
     end,
   },
 
@@ -237,7 +230,7 @@ local plugins = {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
     config = function()
-      require("chatgpt").setup(require("custom.configs.chatpgt").config)
+      require "custom.configs.chatpgt"
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
@@ -265,6 +258,46 @@ local plugins = {
   --     "SmiteshP/nvim-navic",
   --     "nvim-tree/nvim-web-devicons", -- optional dependency
   --   },
+  -- },
+
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+    lazy = false,
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
+    config = function()
+      require("telescope").load_extension "fzf"
+    end,
+  },
+
+  -- For the current symbols
+  {
+    "utilyre/barbecue.nvim",
+    lazy = false,
+    name = "barbecue",
+    version = "*",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons", -- optional dependency
+    },
+    config = function()
+      require("barbecue").setup {
+        attach_navic = false, -- prevent barbecue from automatically attaching nvim-navic
+      }
+    end,
+  },
+  -- Memory leak
+  -- {
+  --   "barrett-ruth/import-cost.nvim",
+  --   build = "sh install.sh yarn",
+  --   -- if on windows
+  --   -- build = 'pwsh install.ps1 yarn',
+  --   ft = { "typescriptreact", "javascriptreact" },
+  --   config = function()
+  --     require("import-cost").setup()
+  --   end,
   -- },
 }
 

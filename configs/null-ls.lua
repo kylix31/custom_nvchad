@@ -39,7 +39,7 @@ local sources = {
   -- b.formatting.deno_fmt, -- choosed deno for ts/js files cuz its very fast!
   b.formatting.prettier,
 
-  b.formatting.eslint_d,
+  b.formatting.eslint,
 
   b.formatting.black,
   b.formatting.isort,
@@ -47,12 +47,16 @@ local sources = {
   -- Lua
   b.formatting.stylua,
 
+  b.formatting.beautysh,
+
   -- cpp
   b.formatting.clang_format,
 
   b.formatting.phpcsfixer,
 
   b.formatting.google_java_format,
+
+  b.formatting.terraform_fmt,
 
   b.formatting.sqlfluff.with {
     extra_args = { "--dialect", "mysql" }, -- change to your dialect
