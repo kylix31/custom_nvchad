@@ -98,7 +98,7 @@ local plugins = {
 
   {
     "stevearc/aerial.nvim",
-    ft = { "javascript", "typescript", "php" },
+    ft = { "javascript", "typescript", "php", "typescriptreact", "javascriptreact" },
     config = function()
       require("aerial").setup()
     end,

@@ -39,7 +39,7 @@ local sources = {
   -- b.formatting.deno_fmt, -- choosed deno for ts/js files cuz its very fast!
   b.formatting.prettier,
 
-  b.formatting.eslint,
+  b.formatting.eslint_d,
 
   b.formatting.black,
   b.formatting.isort,
