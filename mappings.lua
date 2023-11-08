@@ -9,8 +9,18 @@ M.general = {
     ["<leader>jt"] = { ":set ft=json <CR>", "set filetype to json" },
     ["<leader>jf"] = { ":%!jq .<CR>", "format json" },
     ["<leader>jc"] = { ":%!jq -c .<CR>", "compact json" },
+  },
+}
 
+M.aerial = {
+  n = {
     ["<leader>ta"] = { ":AerialToggle <CR>", "toggle aerial" },
+  },
+}
+
+M.trouble = {
+  n = {
+    ["<leader>tt"] = { ":TroubleToggle <CR>", "toggle trouble" },
   },
 }
 
