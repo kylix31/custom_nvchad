@@ -7,15 +7,15 @@ local plugins = {
 
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      -- format & linting
-      {
-        "jose-elias-alvarez/null-ls.nvim",
-        config = function()
-          require "custom.configs.null-ls"
-        end,
-      },
-    },
+    -- dependencies = {
+    -- format & linting
+    -- {
+    --   "jose-elias-alvarez/null-ls.nvim",
+    --   config = function()
+    --     require "custom.configs.null-ls"
+    --   end,
+    -- },
+    -- },
     config = function()
       require "plugins.configs.lspconfig"
       require "custom.configs.lspconfig"
@@ -299,6 +299,20 @@ local plugins = {
   --     require("import-cost").setup()
   --   end,
   -- },
+
+  --linter and format
+  {
+    "creativenull/efmls-configs-nvim",
+    dependencies = { "neovim/nvim-lspconfig" },
+  },
+
+  {
+    "lukas-reineke/lsp-format.nvim",
+    dependencies = { "neovim/nvim-lspconfig" },
+    config = function()
+      require("lsp-format").setup {}
+    end,
+  },
 }
 
 return plugins

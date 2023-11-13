@@ -1,6 +1,7 @@
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
 local navic = require "nvim-navic"
+local efm_config = require "custom.configs.efm-config"
 
 local lspconfig = require "lspconfig"
 
@@ -22,6 +23,7 @@ local servers = {
   "terraform_lsp",
   "prismals",
   "bashls",
+  "efm",
 }
 
 -- capabilities.textDocument.foldingRange = {
@@ -46,6 +48,16 @@ for _, lsp in ipairs(servers) do
         provideFormatter = false,
       },
     }
+  elseif lsp == "efm" then
+    lspconfig[lsp].setup {
+      on_attach = require("lsp-format").on_attach,
+      init_options = { documentFormatting = true },
+      filetypes = efm_config.filetypes,
+      settings = {
+        rootMarkers = { ".git/" },
+        languages = efm_config.languages,
+      },
+    }
   else
     lspconfig[lsp].setup {
       on_attach = custom_on_attach,
@@ -53,6 +65,3 @@ for _, lsp in ipairs(servers) do
     }
   end
 end
-
---
--- lspconfig.pyright.setup { blabla}
