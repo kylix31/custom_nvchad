@@ -39,6 +39,12 @@ local custom_on_attach = function(client, bufnr)
   on_attach(client, bufnr)
 end
 
+local custom_prisma_on_attach = function(client, bufnr)
+  require("lsp-format").on_attach(client, bufnr)
+
+  custom_on_attach(client, bufnr)
+end
+
 for _, lsp in ipairs(servers) do
   if lsp == "html" then
     lspconfig[lsp].setup {
@@ -57,6 +63,11 @@ for _, lsp in ipairs(servers) do
         rootMarkers = { ".git/" },
         languages = efm_config.languages,
       },
+    }
+  elseif lsp == "prismals" then
+    lspconfig[lsp].setup {
+      on_attach = custom_prisma_on_attach,
+      capabilities = capabilities,
     }
   else
     lspconfig[lsp].setup {
