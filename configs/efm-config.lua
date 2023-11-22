@@ -16,8 +16,13 @@ local default_languages = require("efmls-configs.defaults").languages()
 local eslint_d = require "efmls-configs.formatters.eslint_d"
 local prettier_d = require "efmls-configs.formatters.prettier_d"
 local beautysh = require "efmls-configs.formatters.beautysh"
+local mdformat = require "efmls-configs.formatters.mdformat"
+local prettier = require "efmls-configs.formatters.prettier"
+local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
 
 local stylelint = require "efmls-configs.linters.stylelint"
+local markdownlint = require "efmls-configs.linters.markdownlint"
+local yamllint = require "efmls-configs.linters.yamllint"
 
 local adicional_languages = {
   "python",
@@ -36,6 +41,9 @@ local efm_languages = {
   zsh = { beautysh },
   css = { stylelint, prettier_d },
   scss = { stylelint, prettier_d },
+  markdown = { mdformat, markdownlint },
+  yaml = { prettier, yamllint },
+  terraform = { terraform_fmt },
 }
 
 local M = {}
