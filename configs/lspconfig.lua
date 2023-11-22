@@ -20,7 +20,7 @@ local servers = {
   "jdtls",
   "lemminx",
   "sqlls",
-  "terraform_lsp",
+  "terraformls",
   "prismals",
   "bashls",
   "efm",
@@ -45,6 +45,12 @@ local custom_prisma_on_attach = function(client, bufnr)
   custom_on_attach(client, bufnr)
 end
 
+local custom_efm_on_attach = function(client, bufnr)
+  require("lsp-format").on_attach(client, bufnr)
+
+  on_attach(client, bufnr)
+end
+
 for _, lsp in ipairs(servers) do
   if lsp == "html" then
     lspconfig[lsp].setup {
@@ -56,7 +62,7 @@ for _, lsp in ipairs(servers) do
     }
   elseif lsp == "efm" then
     lspconfig[lsp].setup {
-      on_attach = require("lsp-format").on_attach,
+      on_attach = custom_efm_on_attach,
       init_options = { documentFormatting = true },
       filetypes = efm_config.filetypes,
       settings = {
