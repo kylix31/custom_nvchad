@@ -1,6 +1,25 @@
 ---@type MappingsTable
 local M = {}
 
+M.tabufline = {
+  plugin = true,
+
+  n = {
+    ["<leader>xa"] = {
+      function()
+        require("nvchad.tabufline").closeAllBufs()
+      end,
+      "Close all buffers",
+    },
+    ["<leader>xo"] = {
+      function()
+        require("nvchad.tabufline").closeOtherBufs()
+      end,
+      "Close all buffers",
+    },
+  },
+}
+
 M.general = {
   n = {
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
