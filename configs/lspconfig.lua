@@ -2,6 +2,7 @@ local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
 local navic = require "nvim-navic"
 local efm_config = require "custom.configs.efm-config"
+local utils = require "core.utils"
 
 local lspconfig = require "lspconfig"
 
@@ -39,30 +40,37 @@ local custom_on_attach = function(client, bufnr)
   on_attach(client, bufnr)
 end
 
-local custom_prisma_on_attach = function(client, bufnr)
+local custom_on_attach_format = function(client, bufnr)
   require("lsp-format").on_attach(client, bufnr)
 
-  custom_on_attach(client, bufnr)
+  utils.load_mappings("lspconfig", { buffer = bufnr })
+
+  if client.server_capabilities.signatureHelpProvider then
+    require("nvchad.signature").setup(client)
+  end
+
+  if not utils.load_config().ui.lsp_semantic_tokens and client.supports_method "textDocument/semanticTokens" then
+    client.server_capabilities.semanticTokensProvider = nil
+  end
 end
 
-local custom_efm_on_attach = function(client, bufnr)
-  require("lsp-format").on_attach(client, bufnr)
-
-  on_attach(client, bufnr)
-end
+local default_setup = {
+  on_attach = custom_on_attach,
+  capabilities = capabilities,
+}
 
 for _, lsp in ipairs(servers) do
+  local lsp_setup = default_setup
+
   if lsp == "html" then
-    lspconfig[lsp].setup {
+    lsp_setup = {
       on_attach = on_attach,
       capabilities = capabilities,
-      init_options = {
-        provideFormatter = false,
-      },
+      init_options = { provideFormatter = false },
     }
   elseif lsp == "efm" then
-    lspconfig[lsp].setup {
-      on_attach = custom_efm_on_attach,
+    lsp_setup = {
+      on_attach = custom_on_attach_format,
       init_options = { documentFormatting = true },
       filetypes = efm_config.filetypes,
       settings = {
@@ -71,14 +79,11 @@ for _, lsp in ipairs(servers) do
       },
     }
   elseif lsp == "prismals" then
-    lspconfig[lsp].setup {
-      on_attach = custom_prisma_on_attach,
-      capabilities = capabilities,
-    }
-  else
-    lspconfig[lsp].setup {
-      on_attach = custom_on_attach,
+    lsp_setup = {
+      on_attach = custom_on_attach_format,
       capabilities = capabilities,
     }
   end
+
+  lspconfig[lsp].setup(lsp_setup)
 end
