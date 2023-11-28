@@ -13,43 +13,30 @@ end
 
 local default_languages = require("efmls-configs.defaults").languages()
 
-local eslint_d = require "efmls-configs.formatters.eslint_d"
-local prettier_d = require "efmls-configs.formatters.prettier_d"
-local beautysh = require "efmls-configs.formatters.beautysh"
-local mdformat = require "efmls-configs.formatters.mdformat"
-local prettier = require "efmls-configs.formatters.prettier"
-local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
-
 local stylelint = require "efmls-configs.linters.stylelint"
 local markdownlint = require "efmls-configs.linters.markdownlint"
 local yamllint = require "efmls-configs.linters.yamllint"
+local luacheck = require "efmls-configs.linters.luacheck"
 
-local adicional_languages = {
-  "python",
-  "php",
-  "go",
-  "lua",
-  "prisma",
-}
+-- local adicional_languages = {
+--   "python",
+--   "go",
+--   "lua",
+--   "html",
+-- }
 
 local efm_languages = {
-  typescript = { eslint_d, prettier_d },
-  javascript = { eslint_d, prettier_d },
-  typescriptreact = { eslint_d, prettier_d },
-  javascriptreact = { eslint_d, prettier_d },
-  sh = { beautysh },
-  zsh = { beautysh },
-  css = { stylelint, prettier_d },
-  scss = { stylelint, prettier_d },
-  markdown = { mdformat, markdownlint },
-  yaml = { prettier, yamllint },
-  terraform = { terraform_fmt },
+  css = { stylelint },
+  scss = { stylelint },
+  markdown = { markdownlint },
+  yaml = { yamllint },
+  lua = { luacheck },
 }
 
 local M = {}
 
 M.languages = vim.tbl_extend("force", default_languages, efm_languages)
 
-M.filetypes = getKeysAsStrings(efm_languages, adicional_languages)
+M.filetypes = getKeysAsStrings(efm_languages)
 
 return M

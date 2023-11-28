@@ -1,6 +1,12 @@
 ---@type MappingsTable
 local M = {}
 
+M.disabled = {
+  n = {
+    ["<leader>fm"] = "",
+  },
+}
+
 M.tabufline = {
   plugin = true,
 
@@ -96,6 +102,17 @@ M.custom_telescope = {
     ["<leader>fv"] = {
       ":Telescope file_browser path=%:p:h select_buffer=true <CR>",
       "telescope file_browser",
+    },
+  },
+}
+
+M.conform = {
+  n = {
+    ["<leader>fm"] = {
+      function()
+        require("conform").format { async = true, lsp_fallback = true }
+      end,
+      "conform format",
     },
   },
 }

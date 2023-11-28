@@ -156,6 +156,7 @@ local plugins = {
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
     lazy = false,
+    commit = "6c30f3c8915d7b31c3decdfe6c7672432da1809d",
     config = function()
       require("Comment").setup {
         pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
@@ -311,6 +312,13 @@ local plugins = {
     config = function()
       require("lsp-format").setup {}
     end,
+  },
+
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    opts = require("custom.configs.conform").opts,
   },
 }
 
