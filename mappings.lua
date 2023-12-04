@@ -21,7 +21,7 @@ M.tabufline = {
       function()
         require("nvchad.tabufline").closeOtherBufs()
       end,
-      "Close all buffers",
+      "Close all others buffers",
     },
   },
 }

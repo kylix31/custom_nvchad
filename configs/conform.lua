@@ -5,7 +5,7 @@ local formatters = {
   lua = { "stylua" },
   typescript = { "eslint_d", "prettierd" },
   javascript = { "eslint_d", "prettierd" },
-  typescriptreact = { "eslint_d", "prettierd" },
+  typescriptreact = { "prettierd", "eslint_d" },
   javascriptreact = { "eslint_d", "prettierd" },
   sh = { "beautysh" },
   zsh = { "beautysh" },
@@ -15,6 +15,7 @@ local formatters = {
   yaml = { "prettierd" },
   terraform = { "terraform_fmt" },
   php = { "php_cs_fixer" },
+  html = { "prettierd" },
 }
 
 M.opts = {
