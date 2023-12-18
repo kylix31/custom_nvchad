@@ -2,20 +2,20 @@ local M = {}
 local slow_format_filetypes = {}
 
 local formatters = {
-  lua = { "stylua" },
-  typescript = { "eslint_d", "prettierd" },
-  javascript = { "eslint_d", "prettierd" },
-  typescriptreact = { "prettierd", "eslint_d" },
-  javascriptreact = { "eslint_d", "prettierd" },
-  sh = { "beautysh" },
-  zsh = { "beautysh" },
-  css = { "prettierd" },
-  scss = { "prettierd" },
-  markdown = { "mdformat" },
-  yaml = { "prettierd" },
-  terraform = { "terraform_fmt" },
+  -- lua = { "stylua" },
+  -- typescript = { "eslint_d", "prettierd" },
+  -- javascript = { "eslint_d", "prettierd" },
+  -- typescriptreact = { "prettierd", "eslint_d" },
+  -- javascriptreact = { "eslint_d", "prettierd" },
+  -- sh = { "beautysh" },
+  -- zsh = { "beautysh" },
+  -- css = { "prettierd" },
+  -- scss = { "prettierd" },
+  -- markdown = { "mdformat" },
+  -- yaml = { "prettierd" },
+  -- terraform = { "terraform_fmt" },
   php = { "php_cs_fixer" },
-  html = { "prettierd" },
+  -- html = { "prettierd" },
 }
 
 M.opts = {

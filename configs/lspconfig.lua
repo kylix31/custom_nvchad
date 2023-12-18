@@ -70,8 +70,8 @@ for _, lsp in ipairs(servers) do
     }
   elseif lsp == "efm" then
     lsp_setup = {
-      on_attach = on_attach,
-      -- init_options = { documentFormatting = true, documentRangeFormatting = true },
+      on_attach = custom_on_attach_format,
+      init_options = { documentFormatting = true, documentRangeFormatting = true },
       filetypes = efm_config.filetypes,
       settings = {
         rootMarkers = { ".git/" },
