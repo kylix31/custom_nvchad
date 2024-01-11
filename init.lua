@@ -1,4 +1,5 @@
 local opt = vim.opt
+local lsp = vim.lsp
 
 -- local autocmd = vim.api.nvim_create_autocmd
 
@@ -9,3 +10,6 @@ opt.wrap = true
 --   pattern = "*",
 --   command = "tabdo wincmd =",
 -- })
+
+lsp.set_log_level "debug"
+

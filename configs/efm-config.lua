@@ -16,15 +16,15 @@ local default_languages = require("efmls-configs.defaults").languages()
 local stylelint = require "efmls-configs.linters.stylelint"
 local markdownlint = require "efmls-configs.linters.markdownlint"
 local yamllint = require "efmls-configs.linters.yamllint"
-local luacheck = require "efmls-configs.linters.luacheck"
 
 local eslint_d = require "efmls-configs.formatters.eslint_d"
 local prettier_d = require "efmls-configs.formatters.prettier_d"
+local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
 
 local adicional_languages = {
   -- "python",
   -- "go",
-  -- "lua",
+  "lua",
   "html",
 }
 
@@ -33,11 +33,11 @@ local efm_languages = {
   scss = { stylelint },
   markdown = { markdownlint },
   yaml = { yamllint },
-  lua = { luacheck },
   typescript = { eslint_d, prettier_d },
   typescriptreact = { eslint_d, prettier_d },
   javascript = { eslint_d, prettier_d },
   javascriptreact = { eslint_d, prettier_d },
+  terraform = { terraform_fmt },
 }
 
 local M = {}

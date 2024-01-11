@@ -22,7 +22,6 @@ local servers = {
   "sqlls",
   "terraformls",
   "prismals",
-  "bashls",
   "efm",
   "phpactor",
 }
