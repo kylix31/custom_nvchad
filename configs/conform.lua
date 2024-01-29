@@ -15,6 +15,7 @@ local formatters = {
   -- yaml = { "prettierd" },
   -- terraform = { "terraform_fmt" },
   php = { "php_cs_fixer" },
+  -- python = { "black" },
   -- html = { "prettierd" },
 }
 

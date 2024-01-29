@@ -20,6 +20,7 @@ local yamllint = require "efmls-configs.linters.yamllint"
 local eslint_d = require "efmls-configs.formatters.eslint_d"
 local prettier_d = require "efmls-configs.formatters.prettier_d"
 local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
+-- local black = require "efmls-configs.formatters.black"
 
 local adicional_languages = {
   -- "python",
@@ -38,6 +39,7 @@ local efm_languages = {
   javascript = { eslint_d, prettier_d },
   javascriptreact = { eslint_d, prettier_d },
   terraform = { terraform_fmt },
+  -- python = { black },
 }
 
 local M = {}

@@ -82,6 +82,20 @@ for _, lsp in ipairs(servers) do
       on_attach = custom_on_attach_format,
       capabilities = capabilities,
     }
+  elseif lsp == "pylsp" then
+    lsp_setup = {
+      on_attach = custom_on_attach_format,
+      capabilities = capabilities,
+      settings = {
+        pylsp = {
+          plugins = {
+            autopep8 = {
+              enabled = false,
+            },
+          },
+        },
+      },
+    }
   end
 
   lspconfig[lsp].setup(lsp_setup)
