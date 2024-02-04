@@ -131,14 +131,6 @@ local plugins = {
   },
 
   {
-    "iamcco/markdown-preview.nvim",
-    run = function()
-      vim.fn["mkdp#util#install"]()
-    end,
-    ft = "markdown",
-  },
-
-  {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
     event = "VeryLazy",
@@ -337,6 +329,33 @@ local plugins = {
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     opts = require("custom.configs.conform").opts,
+  },
+
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = "cd app && yarn install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    ft = { "markdown" },
+  },
+
+  {
+    "robitx/gp.nvim",
+    lazy = false,
+    config = function()
+      config = require("custom.configs.gp-config").config
+
+      require("gp").setup(config)
+
+      require("custom.configs.gp-config").mappings()
+
+      -- or setup with your own config (see Install > Configuration in Readme)
+      -- require("gp").setup(config)
+
+      -- shortcuts might be setup here (see Usage > Shortcuts in Readme)
+    end,
   },
 }
 
