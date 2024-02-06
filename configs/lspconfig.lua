@@ -24,7 +24,10 @@ local servers = {
   "prismals",
   "efm",
   "phpactor",
+  "gopls",
 }
+
+-- This function searches for a target value within an input array
 
 -- capabilities.textDocument.foldingRange = {
 --   dynamicRegistration = false,
@@ -77,7 +80,7 @@ for _, lsp in ipairs(servers) do
         languages = efm_config.languages,
       },
     }
-  elseif lsp == "prismals" then
+  elseif lsp == "prismals" or lsp == "gopls" then
     lsp_setup = {
       on_attach = custom_on_attach_format,
       capabilities = capabilities,
