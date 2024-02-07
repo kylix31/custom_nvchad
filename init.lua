@@ -5,6 +5,9 @@ local lsp = vim.lsp
 
 opt.linebreak = true
 opt.wrap = true
+
+opt.hlsearch = false
+opt.incsearch = true
 -- Auto resize panes when resizing nvim window
 -- autocmd("VimResized", {
 --   pattern = "*",
@@ -12,4 +15,3 @@ opt.wrap = true
 -- })
 
 lsp.set_log_level "debug"
-
