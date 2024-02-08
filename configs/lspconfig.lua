@@ -95,6 +95,12 @@ for _, lsp in ipairs(servers) do
             autopep8 = {
               enabled = false,
             },
+            rope_autoimport = {
+              enabled = true,
+            },
+            isort = {
+              enabled = true,
+            },
           },
         },
       },
