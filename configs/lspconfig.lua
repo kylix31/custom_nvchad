@@ -14,7 +14,7 @@ local servers = {
   "clangd",
   "eslint",
   "cssmodules_ls",
-  "pylsp",
+  "pyright",
   "tailwindcss",
   "yamlls",
   "jdtls",
@@ -25,6 +25,8 @@ local servers = {
   "efm",
   "phpactor",
   "gopls",
+  "taplo",
+  "pylsp",
 }
 
 -- This function searches for a target value within an input array
@@ -80,7 +82,7 @@ for _, lsp in ipairs(servers) do
         languages = efm_config.languages,
       },
     }
-  elseif lsp == "prismals" or lsp == "gopls" then
+  elseif lsp == "prismals" or lsp == "gopls" or lsp == "taplo" then
     lsp_setup = {
       on_attach = custom_on_attach_format,
       capabilities = capabilities,

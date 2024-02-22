@@ -28,12 +28,16 @@ M.tabufline = {
 
 M.general = {
   n = {
-    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+    -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<Esc>"] = { ":noh <CR>", "cancel highlights" },
 
     ["<leader>jt"] = { ":set ft=json <CR>", "set filetype to json" },
     ["<leader>jf"] = { ":%!jq .<CR>", "format json" },
     ["<leader>jc"] = { ":%!jq -c .<CR>", "compact json" },
+
+    ["sy"] = { '"+y', "system yank" },
+    ["sly"] = { '"+yy', "system line yank" },
+    ["swy"] = { '"+yiw', "system word yank" },
   },
 }
 
