@@ -7,6 +7,34 @@ M.disabled = {
   },
 }
 
+M.nvterm = {
+  plugin = true,
+
+  t = {
+    -- toggle in terminal mode
+    ["<C-i>"] = {
+      function()
+        require("nvterm.terminal").toggle "float"
+      end,
+      "Toggle floating term",
+    },
+
+    ["<C-h>"] = {
+      function()
+        require("nvterm.terminal").toggle "horizontal"
+      end,
+      "Toggle horizontal term",
+    },
+
+    ["<C-v>"] = {
+      function()
+        require("nvterm.terminal").toggle "vertical"
+      end,
+      "Toggle vertical term",
+    },
+  },
+}
+
 M.tabufline = {
   plugin = true,
 
@@ -35,9 +63,12 @@ M.general = {
     ["<leader>jf"] = { ":%!jq .<CR>", "format json" },
     ["<leader>jc"] = { ":%!jq -c .<CR>", "compact json" },
 
-    ["sy"] = { '"+y', "system yank" },
     ["sly"] = { '"+yy', "system line yank" },
     ["swy"] = { '"+yiw', "system word yank" },
+  },
+
+  v = {
+    ["sy"] = { '"+y', "system yank" },
   },
 }
 
