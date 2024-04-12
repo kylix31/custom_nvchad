@@ -357,6 +357,11 @@ local plugins = {
       -- shortcuts might be setup here (see Usage > Shortcuts in Readme)
     end,
   },
+
+  {
+    "folke/zen-mode.nvim",
+    lazy = false,
+  },
 }
 
 return plugins

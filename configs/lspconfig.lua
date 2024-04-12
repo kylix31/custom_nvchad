@@ -26,7 +26,7 @@ local servers = {
   "phpactor",
   "gopls",
   "taplo",
-  "pylsp",
+  -- "pylsp",
 }
 
 -- This function searches for a target value within an input array
