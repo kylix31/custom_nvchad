@@ -327,6 +327,26 @@ M.config = {
       )
     end,
 
+    -- Nice JSDOC with examples
+    Jsdoc = function(gp, params)
+      local template = "Having following from {{filename}}:\n\n"
+        .. "```{{filetype}}\n{{selection}}\n```\n\n"
+        .. "Create a nice JSDOC with some examples. I just need the jsdoc, not the code itself"
+        .. "\n\nRespond exclusively with the snippet that should replace the selection above."
+
+      local agent = gp.get_command_agent()
+      gp.info("JSDOC selection with agent: " .. agent.name)
+
+      gp.Prompt(
+        params,
+        gp.Target.prepend,
+        nil, -- command will run directly without any prompting for user input
+        agent.model,
+        template,
+        agent.system_prompt
+      )
+    end,
+
     -- your own functions can go here, see README for more examples like
     -- :GpExplain, :GpUnitTests.., :GpTranslator etc.
 
