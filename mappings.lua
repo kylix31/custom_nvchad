@@ -152,4 +152,62 @@ M.conform = {
   },
 }
 
+M.copilot_chat = {
+  n = {
+    ["<leader>cch"] = {
+      function()
+        local actions = require "CopilotChat.actions"
+        require("CopilotChat.integrations.telescope").pick(actions.help_actions())
+      end,
+      "CopilotChat - Help actions",
+    },
+
+    ["<leader>ccp"] = {
+      function()
+        local actions = require "CopilotChat.actions"
+        require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
+      end,
+      "CopilotChat - Prompt actions",
+    },
+
+    ["<leader>ccq"] = {
+      function()
+        local input = vim.fn.input "Quick Chat: "
+        if input ~= "" then
+          require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
+        end
+      end,
+      "CopilotChat - Quick chat",
+    },
+  },
+
+  v = {
+    ["<leader>cch"] = {
+      function()
+        local actions = require "CopilotChat.actions"
+        require("CopilotChat.integrations.telescope").pick(actions.help_actions())
+      end,
+      "CopilotChat - Help actions",
+    },
+
+    ["<leader>ccp"] = {
+      function()
+        local actions = require "CopilotChat.actions"
+        require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
+      end,
+      "CopilotChat - Prompt actions",
+    },
+
+    ["<leader>ccq"] = {
+      function()
+        local input = vim.fn.input "Quick Chat: "
+        if input ~= "" then
+          require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
+        end
+      end,
+      "CopilotChat - Quick chat",
+    },
+  },
+}
+
 return M
