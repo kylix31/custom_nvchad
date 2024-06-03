@@ -163,17 +163,16 @@ local plugins = {
     },
   },
 
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    lazy = false,
-    commit = "6c30f3c8915d7b31c3decdfe6c7672432da1809d",
-    config = function()
-      require("Comment").setup {
-        pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
-      }
-    end,
-    dependencies = { "numToStr/Comment.nvim" },
-  },
+  -- {
+  --   "JoosepAlviste/nvim-ts-context-commentstring",
+  --   config = function()
+  --     require("Comment").setup {
+  --       pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+  --     }
+  --   end,
+  --   dependencies = { "numToStr/Comment.nvim" },
+  --   ft = { "javascriptreact", "typescriptreact" },
+  -- },
 
   -- To make a plugin not be loaded
   -- {
@@ -248,13 +247,14 @@ local plugins = {
       "nvim-telescope/telescope.nvim",
     },
   },
+
   {
     "mfussenegger/nvim-jdtls",
     ft = { "java" },
   },
   {
     "nvim-telescope/telescope-file-browser.nvim",
-    lazy = false,
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
     config = function()
       require("telescope").load_extension "file_browser"
     end,
@@ -361,6 +361,51 @@ local plugins = {
   {
     "folke/zen-mode.nvim",
     lazy = false,
+  },
+
+  -- {
+  --   "github/copilot.vim",
+  --   lazy = false,
+  -- },
+
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup {
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      }
+    end,
+  },
+
+  {
+    "zbirenbaum/copilot-cmp",
+    lazy = false,
+    config = function()
+      require("copilot_cmp").setup()
+    end,
+  },
+
+  {
+    "hrsh7th/nvim-cmp",
+    opts = require("custom.configs.cmp").config,
+  },
+
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    lazy = false,
+    branch = "canary",
+    dependencies = {
+      { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
+      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
+    },
+    opts = {
+      debug = true, -- Enable debugging
+      -- See Configuration section for rest
+    },
+    -- See Commands section for default commands if you want to lazy load on them
   },
 }
 
