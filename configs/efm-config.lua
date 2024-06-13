@@ -20,6 +20,7 @@ local hadolint = require "efmls-configs.linters.hadolint"
 
 local eslint_d = require "efmls-configs.formatters.eslint_d"
 local prettier_d = require "efmls-configs.formatters.prettier_d"
+local prettier = require "efmls-configs.formatters.prettier"
 local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
 -- local autopep8 = require "efmls-configs.formatters.autopep8"
 local yapf = require "efmls-configs.formatters.yapf"
@@ -34,7 +35,7 @@ local efm_languages = {
   css = { stylelint, prettier_d },
   scss = { stylelint, prettier_d },
   markdown = { markdownlint },
-  yaml = { yamllint },
+  yaml = { yamllint, prettier },
   typescript = { eslint_d, prettier_d },
   typescriptreact = { eslint_d, prettier_d },
   javascript = { eslint_d, prettier_d },
