@@ -70,6 +70,10 @@ M.general = {
   v = {
     ["sy"] = { '"+y', "system yank" },
   },
+
+  x = {
+    ["<leader>ss"] = { '"zy<Cmd>Telescope live_grep<CR><C-r>z', "grep selected text" },
+  },
 }
 
 M.aerial = {
