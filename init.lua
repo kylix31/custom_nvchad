@@ -1,4 +1,5 @@
 local opt = vim.opt
+local g = vim.g
 
 -- local autocmd = vim.api.nvim_create_autocmd
 
@@ -15,4 +16,5 @@ opt.incsearch = true
 
 opt.clipboard = "unnamed"
 
-vim.g.skip_ts_context_commentstring_module = true
+g.skip_ts_context_commentstring_module = true
+opt.updatetime = 100
