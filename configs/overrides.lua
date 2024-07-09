@@ -23,9 +23,9 @@ M.treesitter = {
   --   enable = true,
   --   enable_autocmd = false,
   -- },
-  autotag = {
-    enable = true,
-  },
+  -- autotag = {
+  --   enable = true,
+  -- },
 }
 
 M.mason = {

@@ -20,31 +20,31 @@ local plugins = {
       require "plugins.configs.lspconfig"
       require "custom.configs.lspconfig"
     end,
-    opts = {
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = {
-          spacing = 4,
-          source = "if_many",
-          prefix = "●",
-          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
-          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
-          -- prefix = "icons",
-        },
-        severity_sort = true,
-        inlay_hints = {
-          enabled = false,
-        },
-      },
-    },
+    -- opts = {
+    --   diagnostics = {
+    --     underline = true,
+    --     update_in_insert = false,
+    --     virtual_text = {
+    --       spacing = 4,
+    --       source = "if_many",
+    --       prefix = "●",
+    --       -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+    --       -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+    --       -- prefix = "icons",
+    --     },
+    --     severity_sort = true,
+    --     inlay_hints = {
+    --       enabled = false,
+    --     },
+    --   },
+    -- },
   },
 
   -- override plugin configs
-  {
-    "williamboman/mason.nvim",
-    opts = overrides.mason,
-  },
+  -- {
+  --   "williamboman/mason.nvim",
+  --   opts = overrides.mason,
+  -- },
 
   {
     "nvim-treesitter/nvim-treesitter",
@@ -57,13 +57,13 @@ local plugins = {
   },
 
   -- Install a plugin
-  {
-    "max397574/better-escape.nvim",
-    event = "InsertEnter",
-    config = function()
-      require("better_escape").setup()
-    end,
-  },
+  -- {
+  --   "max397574/better-escape.nvim",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("better_escape").setup()
+  --   end,
+  -- },
 
   {
     "tpope/vim-fugitive",
@@ -101,9 +101,16 @@ local plugins = {
   {
     "windwp/nvim-ts-autotag",
     ft = { "typescriptreact", "javascriptreact", "markdown", "html", "php" },
-    -- config = function()
-    --   require("nvim-ts-autotag").setup()
-    -- end,
+    config = function()
+      require("nvim-ts-autotag").setup {
+        opts = {
+          -- Defaults
+          enable_close = true, -- Auto close tags
+          enable_rename = true, -- Auto rename pairs of tags
+          enable_close_on_slash = true, -- Auto close on trailing </
+        },
+      }
+    end,
   },
 
   {
@@ -257,10 +264,10 @@ local plugins = {
     },
   },
 
-  {
-    "mfussenegger/nvim-jdtls",
-    ft = { "java" },
-  },
+  -- {
+  --   "mfussenegger/nvim-jdtls",
+  --   ft = { "java" },
+  -- },
   {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
@@ -333,12 +340,12 @@ local plugins = {
     end,
   },
 
-  {
-    "stevearc/conform.nvim",
-    event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
-    opts = require("custom.configs.conform").opts,
-  },
+  -- {
+  --   "stevearc/conform.nvim",
+  --   event = { "BufWritePre" },
+  --   cmd = { "ConformInfo" },
+  --   opts = require("custom.configs.conform").opts,
+  -- },
 
   {
     "iamcco/markdown-preview.nvim",
@@ -350,22 +357,22 @@ local plugins = {
     ft = { "markdown" },
   },
 
-  {
-    "robitx/gp.nvim",
-    lazy = false,
-    config = function()
-      config = require("custom.configs.gp-config").config
-
-      require("gp").setup(config)
-
-      require("custom.configs.gp-config").mappings()
-
-      -- or setup with your own config (see Install > Configuration in Readme)
-      -- require("gp").setup(config)
-
-      -- shortcuts might be setup here (see Usage > Shortcuts in Readme)
-    end,
-  },
+  -- {
+  --   "robitx/gp.nvim",
+  --   lazy = false,
+  --   config = function()
+  --     config = require("custom.configs.gp-config").config
+  --
+  --     require("gp").setup(config)
+  --
+  --     require("custom.configs.gp-config").mappings()
+  --
+  --     -- or setup with your own config (see Install > Configuration in Readme)
+  --     -- require("gp").setup(config)
+  --
+  --     -- shortcuts might be setup here (see Usage > Shortcuts in Readme)
+  --   end,
+  -- },
 
   {
     "folke/zen-mode.nvim",
@@ -389,18 +396,18 @@ local plugins = {
     end,
   },
 
-  {
-    "zbirenbaum/copilot-cmp",
-    lazy = false,
-    config = function()
-      require("copilot_cmp").setup()
-    end,
-  },
-
-  {
-    "hrsh7th/nvim-cmp",
-    opts = require("custom.configs.cmp").config,
-  },
+  -- {
+  --   "zbirenbaum/copilot-cmp",
+  --   lazy = false,
+  --   config = function()
+  --     require("copilot_cmp").setup()
+  --   end,
+  -- },
+  --
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   opts = require("custom.configs.cmp").config,
+  -- },
 
   {
     "CopilotC-Nvim/CopilotChat.nvim",
@@ -416,6 +423,13 @@ local plugins = {
     },
     -- See Commands section for default commands if you want to lazy load on them
   },
+
+  -- {
+  --   "pmizio/typescript-tools.nvim",
+  --   dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  --   opts = {},
+  --   ft = { "javascriptreact", "typescriptreact", "javascript", "typescript" },
+  -- },
 }
 
 return plugins
