@@ -16,6 +16,40 @@ local M = {}
 --------------------------------------------------------------------------------
 
 M.config = {
+  providers = {
+    openai = {
+      endpoint = "https://api.openai.com/v1/chat/completions",
+      secret = os.getenv "OPENAI_API_KEY",
+    },
+
+    copilot = {
+      endpoint = "https://api.githubcopilot.com/chat/completions",
+      secret = {
+        "bash",
+        "-c",
+        "cat ~/.config/github-copilot/hosts.json | sed -e 's/.*oauth_token...//;s/\".*//'",
+      },
+    },
+
+    -- pplx = {
+    --   endpoint = "https://api.perplexity.ai/chat/completions",
+    --   secret = os.getenv "PPLX_API_KEY",
+    -- },
+    --
+    -- ollama = {
+    --   endpoint = "http://localhost:11434/v1/chat/completions",
+    -- },
+    --
+    -- googleai = {
+    --   endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{{model}}:streamGenerateContent?key={{secret}}",
+    --   secret = os.getenv "GOOGLEAI_API_KEY",
+    -- },
+    --
+    -- anthropic = {
+    --   endpoint = "https://api.anthropic.com/v1/messages",
+    --   secret = os.getenv "ANTHROPIC_API_KEY",
+    -- },
+  },
   -- Please start with minimal config possible.
   -- Just openai_api_key if you don't have OPENAI_API_KEY env set up.
   -- Defaults change over time to improve things, options might get deprecated.
@@ -28,7 +62,6 @@ M.config = {
   -- openai_api_key = os.getenv("env_name.."),
   openai_api_key = os.getenv "OPENAI_API_KEY",
   -- api endpoint (you can change this to azure endpoint)
-  openai_api_endpoint = "https://api.openai.com/v1/chat/completions",
   -- openai_api_endpoint = "https://$URL.openai.azure.com/openai/deployments/{{model}}/chat/completions?api-version=2023-03-15-preview",
   -- prefix for all commands
   cmd_prefix = "Gp",
@@ -46,11 +79,39 @@ M.config = {
   -- agents = {  { name = "ChatGPT4" }, ... },
   agents = {
     {
+      name = "CodeCopilot",
+      chat = true,
+      command = true,
+      -- string with model name or table with model name and parameters
+      model = { model = "gpt-4o" },
+      -- system prompt (use this to specify the persona/role of the AI)
+      system_prompt = "You are an AI working as a code editor.\n\n"
+        .. "Please AVOID COMMENTARY OUTSIDE OF THE SNIPPET RESPONSE.\n"
+        .. "START AND END YOUR ANSWER WITH:\n\n```",
+    },
+    {
+      name = "Copilot",
+      chat = true,
+      command = true,
+      -- string with model name or table with model name and parameters
+      model = { model = "gpt-4o" },
+      -- system prompt (use this to specify the persona/role of the AI)
+      system_prompt = "You are a general AI assistant.\n\n"
+        .. "The user provided the additional info about how they would like you to respond:\n\n"
+        .. "- If you're unsure don't guess and say you don't know instead.\n"
+        .. "- Ask question if you need clarification to provide better answer.\n"
+        .. "- Think deeply and carefully from first principles step by step.\n"
+        .. "- Zoom out first to see the big picture and then zoom in to details.\n"
+        .. "- Use Socratic method to improve your thinking and coding skills.\n"
+        .. "- Don't elide any code from your output if the answer requires coding.\n"
+        .. "- Take a deep breath; You've got this!\n",
+    },
+    {
       name = "ChatGPT4",
       chat = true,
       command = false,
       -- string with model name or table with model name and parameters
-      model = { model = "gpt-4-1106-preview", temperature = 1.1, top_p = 1 },
+      model = { model = "gpt-4o", temperature = 1.1, top_p = 1 },
       -- system prompt (use this to specify the persona/role of the AI)
       system_prompt = "You are a general AI assistant.\n\n"
         .. "The user provided the additional info about how they would like you to respond:\n\n"
@@ -84,7 +145,7 @@ M.config = {
       chat = false,
       command = true,
       -- string with model name or table with model name and parameters
-      model = { model = "gpt-4-1106-preview", temperature = 0.8, top_p = 1 },
+      model = { model = "gpt-4o", temperature = 0.8, top_p = 1 },
       -- system prompt (use this to specify the persona/role of the AI)
       system_prompt = "You are an AI working as a code editor.\n\n"
         .. "Please AVOID COMMENTARY OUTSIDE OF THE SNIPPET RESPONSE.\n"
