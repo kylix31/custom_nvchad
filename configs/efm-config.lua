@@ -25,6 +25,7 @@ local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
 -- local autopep8 = require "efmls-configs.formatters.autopep8"
 local yapf = require "efmls-configs.formatters.yapf"
 local isort = require "efmls-configs.formatters.isort"
+local stylua = require "efmls-configs.formatters.stylua"
 
 local adicional_languages = {
   "lua",
@@ -43,6 +44,7 @@ local efm_languages = {
   terraform = { terraform_fmt },
   python = { yapf, isort },
   dockerfile = { hadolint },
+  lua = { stylua },
 }
 
 local M = {}
