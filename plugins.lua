@@ -146,13 +146,13 @@ local plugins = {
     end,
   },
 
-  {
-    "andymass/vim-matchup",
-    config = function()
-      vim.g.matchup_matchparen_offscreen = { method = "popup" }
-    end,
-    ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-  },
+  -- {
+  --   "andymass/vim-matchup",
+  --   config = function()
+  --     vim.g.matchup_matchparen_offscreen = { method = "popup" }
+  --   end,
+  --   ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  -- },
 
   {
     "stevearc/aerial.nvim",
