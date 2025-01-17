@@ -23,9 +23,12 @@ local prettier_d = require "efmls-configs.formatters.prettier_d"
 local prettier = require "efmls-configs.formatters.prettier"
 local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
 -- local autopep8 = require "efmls-configs.formatters.autopep8"
-local yapf = require "efmls-configs.formatters.yapf"
+-- local yapf = require("efmls-configs.formatters.yapf")
+local black = require "efmls-configs.formatters.black"
 local isort = require "efmls-configs.formatters.isort"
 local stylua = require "efmls-configs.formatters.stylua"
+-- local cbfmt = require "efmls-configs.formatters.cbfmt"
+local mdformat = require "efmls-configs.formatters.mdformat"
 
 local adicional_languages = {
   "lua",
@@ -35,14 +38,14 @@ local adicional_languages = {
 local efm_languages = {
   css = { stylelint, prettier_d },
   scss = { stylelint, prettier_d },
-  markdown = { markdownlint },
+  markdown = { markdownlint, mdformat },
   yaml = { yamllint, prettier },
   typescript = { eslint_d, prettier_d },
   typescriptreact = { eslint_d, prettier_d },
-  javascript = { eslint_d, prettier_d },
+  javascript = { eslint_d, prettier },
   javascriptreact = { eslint_d, prettier_d },
   terraform = { terraform_fmt },
-  python = { yapf, isort },
+  python = { black, isort },
   dockerfile = { hadolint },
   lua = { stylua },
 }

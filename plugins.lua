@@ -193,6 +193,7 @@ local plugins = {
         config = function()
           require("custom.configs.nvim-dap").dap_ui()
         end,
+        dependencies = { "nvim-neotest/nvim-nio" },
       },
       {
         "theHamsta/nvim-dap-virtual-text",
@@ -293,6 +294,8 @@ local plugins = {
     "kevinhwang91/nvim-ufo",
     event = "VeryLazy",
     dependencies = { "kevinhwang91/promise-async" },
+    branch = "main",
+    commit = "7dcb8fea3e7b3ccdb50f2c3ae7c248cdf6fe1ae1",
     config = function()
       require "custom.configs.nvim-ufo"
     end,
@@ -385,6 +388,14 @@ local plugins = {
   },
 
   {
+    "mfussenegger/nvim-dap-python",
+    ft = { "python" },
+    config = function()
+      require("dap-python").setup "python3"
+    end,
+  },
+
+  {
     "lukas-reineke/lsp-format.nvim",
     dependencies = { "neovim/nvim-lspconfig" },
     config = function()
@@ -436,14 +447,14 @@ local plugins = {
   --   lazy = false,
   -- },
 
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup {}
-    end,
-  },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   cmd = "Copilot",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("copilot").setup {}
+  --   end,
+  -- },
 
   -- {
   --   "zbirenbaum/copilot-cmp",
@@ -479,6 +490,39 @@ local plugins = {
   --   opts = {},
   --   ft = { "javascriptreact", "typescriptreact", "javascript", "typescript" },
   -- },
+  {
+    "olimorris/codecompanion.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
+      "nvim-telescope/telescope.nvim", -- Optional: For using slash commands
+      { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } }, -- Optional: For prettier markdown rendering
+      { "stevearc/dressing.nvim", opts = {} }, -- Optional: Improves `vim.ui.select`
+    },
+    config = function()
+      require("codecompanion").setup {
+        strategies = {
+          chat = {
+            adapter = "openai",
+          },
+          inline = {
+            adapter = "openai",
+          },
+        },
+      }
+    end,
+    lazy = false,
+  },
+  {
+    "AdiY00/copy-tree.nvim",
+    cmd = { "CopyTree", "SaveTree" },
+    config = function()
+      require("copy-tree").setup()
+    end,
+    -- Example keymap
+    -- vim.keymap.set("n", "<leader>ct", "<cmd>CopyTree<cr>", { desc = "Copy project structure from current directory" }),
+  },
 }
 
 return plugins

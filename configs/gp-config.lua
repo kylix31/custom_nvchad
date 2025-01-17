@@ -16,31 +16,7 @@ local M = {}
 --------------------------------------------------------------------------------
 
 M.config = {
-  providers = {
-    openai = {
-      endpoint = "https://api.openai.com/v1/chat/completions",
-      secret = os.getenv "OPENAI_API_KEY",
-    },
 
-    -- pplx = {
-    --   endpoint = "https://api.perplexity.ai/chat/completions",
-    --   secret = os.getenv "PPLX_API_KEY",
-    -- },
-    --
-    -- ollama = {
-    --   endpoint = "http://localhost:11434/v1/chat/completions",
-    -- },
-    --
-    -- googleai = {
-    --   endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{{model}}:streamGenerateContent?key={{secret}}",
-    --   secret = os.getenv "GOOGLEAI_API_KEY",
-    -- },
-    --
-    -- anthropic = {
-    --   endpoint = "https://api.anthropic.com/v1/messages",
-    --   secret = os.getenv "ANTHROPIC_API_KEY",
-    -- },
-  },
   -- Please start with minimal config possible.
   -- Just openai_api_key if you don't have OPENAI_API_KEY env set up.
   -- Defaults change over time to improve things, options might get deprecated.
@@ -52,95 +28,298 @@ M.config = {
   -- openai_api_key: "sk-...",
   -- openai_api_key = os.getenv("env_name.."),
   openai_api_key = os.getenv "OPENAI_API_KEY",
-  -- api endpoint (you can change this to azure endpoint)
-  -- openai_api_endpoint = "https://$URL.openai.azure.com/openai/deployments/{{model}}/chat/completions?api-version=2023-03-15-preview",
+
+  -- at least one working provider is required
+  -- to disable a provider set it to empty table like openai = {}
+  providers = {
+    -- secrets can be strings or tables with command and arguments
+    -- secret = { "cat", "path_to/openai_api_key" },
+    -- secret = { "bw", "get", "password", "OPENAI_API_KEY" },
+    -- secret : "sk-...",
+    -- secret = os.getenv("env_name.."),
+    openai = {
+      disable = false,
+      endpoint = "https://api.openai.com/v1/chat/completions",
+      -- secret = os.getenv("OPENAI_API_KEY"),
+    },
+    -- azure = {
+    --   disable = true,
+    --   endpoint = "https://$URL.openai.azure.com/openai/deployments/{{model}}/chat/completions",
+    --   secret = os.getenv "AZURE_API_KEY",
+    -- },
+    -- copilot = {
+    --   disable = true,
+    --   endpoint = "https://api.githubcopilot.com/chat/completions",
+    --   secret = {
+    --     "bash",
+    --     "-c",
+    --     "cat ~/.config/github-copilot/hosts.json | sed -e 's/.*oauth_token...//;s/\".*//'",
+    --   },
+    -- },
+    -- ollama = {
+    --   disable = true,
+    --   endpoint = "http://localhost:11434/v1/chat/completions",
+    --   secret = "dummy_secret",
+    -- },
+    -- lmstudio = {
+    --   disable = true,
+    --   endpoint = "http://localhost:1234/v1/chat/completions",
+    --   secret = "dummy_secret",
+    -- },
+    -- googleai = {
+    --   disable = true,
+    --   endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{{model}}:streamGenerateContent?key={{secret}}",
+    --   secret = os.getenv "GOOGLEAI_API_KEY",
+    -- },
+    -- pplx = {
+    --   disable = true,
+    --   endpoint = "https://api.perplexity.ai/chat/completions",
+    --   secret = os.getenv "PPLX_API_KEY",
+    -- },
+    anthropic = {
+      disable = false,
+      endpoint = "https://api.anthropic.com/v1/messages",
+      secret = os.getenv "ANTHROPIC_API_KEY",
+    },
+  },
+
   -- prefix for all commands
   cmd_prefix = "Gp",
   -- optional curl parameters (for proxy, etc.)
   -- curl_params = { "--proxy", "http://X.X.X.X:XXXX" }
   curl_params = {},
 
+  -- log file location
+  log_file = vim.fn.stdpath("log"):gsub("/$", "") .. "/gp.nvim.log",
+  -- write sensitive data to log file for	debugging purposes (like api keys)
+  log_sensitive = false,
+
   -- directory for persisting state dynamically changed by user (like model or persona)
   state_dir = vim.fn.stdpath("data"):gsub("/$", "") .. "/gp/persisted",
+
+  -- default agent names set during startup, if nil last used agent is used
+  default_command_agent = nil,
+  default_chat_agent = nil,
 
   -- default command agents (model + persona)
   -- name, model and system_prompt are mandatory fields
   -- to use agent for chat set chat = true, for command set command = true
-  -- to remove some default agent completely set it just with the name like:
-  -- agents = {  { name = "ChatGPT4" }, ... },
+  -- to remove some default agent completely set it like:
+  -- agents = {  { name = "ChatGPT3-5", disable = true, }, ... },
   agents = {
     {
-      name = "ChatGPT4",
+      name = "ExampleDisabledAgent",
+      disable = true,
+    },
+    {
+      name = "ChatGPT4o",
+      chat = true,
+      command = false,
+      -- string with model name or table with model name and parameters
+      model = { model = "gpt-4o", temperature = 1.1, top_p = 1 },
+      -- system prompt (use this to specify the persona/role of the AI)
+      system_prompt = require("gp.defaults").chat_system_prompt,
+    },
+    {
+      provider = "openai",
+      name = "ChatGPT4o-mini",
       chat = true,
       command = false,
       -- string with model name or table with model name and parameters
       model = { model = "gpt-4o-mini", temperature = 1.1, top_p = 1 },
       -- system prompt (use this to specify the persona/role of the AI)
-      system_prompt = "You are a general AI assistant.\n\n"
-        .. "The user provided the additional info about how they would like you to respond:\n\n"
-        .. "- If you're unsure don't guess and say you don't know instead.\n"
-        .. "- Ask question if you need clarification to provide better answer.\n"
-        .. "- Think deeply and carefully from first principles step by step.\n"
-        .. "- Zoom out first to see the big picture and then zoom in to details.\n"
-        .. "- Use Socratic method to improve your thinking and coding skills.\n"
-        .. "- Don't elide any code from your output if the answer requires coding.\n"
-        .. "- Take a deep breath; You've got this!\n",
+      system_prompt = require("gp.defaults").chat_system_prompt,
     },
+    -- {
+    --   provider = "copilot",
+    --   name = "ChatCopilot",
+    --   chat = true,
+    --   command = false,
+    --   -- string with model name or table with model name and parameters
+    --   model = { model = "gpt-4o", temperature = 1.1, top_p = 1 },
+    --   -- system prompt (use this to specify the persona/role of the AI)
+    --   system_prompt = require("gp.defaults").chat_system_prompt,
+    -- },
+    -- {
+    --   provider = "googleai",
+    --   name = "ChatGemini",
+    --   chat = true,
+    --   command = false,
+    --   -- string with model name or table with model name and parameters
+    --   model = { model = "gemini-pro", temperature = 1.1, top_p = 1 },
+    --   -- system prompt (use this to specify the persona/role of the AI)
+    --   system_prompt = require("gp.defaults").chat_system_prompt,
+    -- },
+    -- {
+    --   provider = "pplx",
+    --   name = "ChatPerplexityLlama3.1-8B",
+    --   chat = true,
+    --   command = false,
+    --   -- string with model name or table with model name and parameters
+    --   model = { model = "llama-3.1-sonar-small-128k-chat", temperature = 1.1, top_p = 1 },
+    --   -- system prompt (use this to specify the persona/role of the AI)
+    --   system_prompt = require("gp.defaults").chat_system_prompt,
+    -- },
     {
-      name = "ChatGPT3-5",
+      provider = "anthropic",
+      name = "ChatClaude-3-5-Sonnet",
       chat = true,
       command = false,
       -- string with model name or table with model name and parameters
-      model = { model = "gpt-3.5-turbo-1106", temperature = 1.1, top_p = 1 },
+      model = { model = "claude-3-5-sonnet-20240620", temperature = 0.8, top_p = 1 },
       -- system prompt (use this to specify the persona/role of the AI)
-      system_prompt = "You are a general AI assistant.\n\n"
-        .. "The user provided the additional info about how they would like you to respond:\n\n"
-        .. "- If you're unsure don't guess and say you don't know instead.\n"
-        .. "- Ask question if you need clarification to provide better answer.\n"
-        .. "- Think deeply and carefully from first principles step by step.\n"
-        .. "- Zoom out first to see the big picture and then zoom in to details.\n"
-        .. "- Use Socratic method to improve your thinking and coding skills.\n"
-        .. "- Don't elide any code from your output if the answer requires coding.\n"
-        .. "- Take a deep breath; You've got this!\n",
+      system_prompt = require("gp.defaults").chat_system_prompt,
     },
     {
-      name = "CodeGPT4",
+      provider = "anthropic",
+      name = "ChatClaude-3-Haiku",
       chat = true,
+      command = false,
+      -- string with model name or table with model name and parameters
+      model = { model = "claude-3-haiku-20240307", temperature = 0.8, top_p = 1 },
+      -- system prompt (use this to specify the persona/role of the AI)
+      system_prompt = require("gp.defaults").chat_system_prompt,
+    },
+    -- {
+    --   provider = "ollama",
+    --   name = "ChatOllamaLlama3.1-8B",
+    --   chat = true,
+    --   command = false,
+    --   -- string with model name or table with model name and parameters
+    --   model = {
+    --     model = "llama3.1",
+    --     temperature = 0.6,
+    --     top_p = 1,
+    --     min_p = 0.05,
+    --   },
+    --   -- system prompt (use this to specify the persona/role of the AI)
+    --   system_prompt = "You are a general AI assistant.",
+    -- },
+    -- {
+    --   provider = "lmstudio",
+    --   name = "ChatLMStudio",
+    --   chat = true,
+    --   command = false,
+    --   -- string with model name or table with model name and parameters
+    --   model = {
+    --     model = "dummy",
+    --     temperature = 0.97,
+    --     top_p = 1,
+    --     num_ctx = 8192,
+    --   },
+    --   -- system prompt (use this to specify the persona/role of the AI)
+    --   system_prompt = "You are a general AI assistant.",
+    -- },
+    {
+      provider = "openai",
+      name = "CodeGPT4o",
+      chat = false,
       command = true,
       -- string with model name or table with model name and parameters
       model = { model = "gpt-4o", temperature = 0.8, top_p = 1 },
       -- system prompt (use this to specify the persona/role of the AI)
-      system_prompt = "You are an AI working as a code editor.\n\n"
-        .. "Please AVOID COMMENTARY OUTSIDE OF THE SNIPPET RESPONSE.\n"
-        .. "START AND END YOUR ANSWER WITH:\n\n```",
+      system_prompt = require("gp.defaults").code_system_prompt,
     },
     {
-      name = "CodeGPT3-5",
+      provider = "openai",
+      name = "CodeGPT4o-mini",
       chat = false,
       command = true,
       -- string with model name or table with model name and parameters
-      model = { model = "gpt-3.5-turbo-1106", temperature = 0.8, top_p = 1 },
+      model = { model = "gpt-4o-mini", temperature = 0.7, top_p = 1 },
       -- system prompt (use this to specify the persona/role of the AI)
-      system_prompt = "You are an AI working as a code editor.\n\n"
-        .. "Please AVOID COMMENTARY OUTSIDE OF THE SNIPPET RESPONSE.\n"
-        .. "START AND END YOUR ANSWER WITH:\n\n```",
+      system_prompt = "Please return ONLY code snippets.\nSTART AND END YOUR ANSWER WITH:\n\n```",
     },
+    {
+      provider = "openai",
+      name = "CodeO1-mini",
+      chat = true,
+      command = true,
+      -- string with model name or table with model name and parameters
+      model = { model = "o1-mini", temperature = 0.7, top_p = 1 },
+      -- system prompt (use this to specify the persona/role of the AI)
+      system_prompt = "Please return ONLY code snippets.\nSTART AND END YOUR ANSWER WITH:\n\n```",
+    },
+    -- {
+    --   provider = "copilot",
+    --   name = "CodeCopilot",
+    --   chat = false,
+    --   command = true,
+    --   -- string with model name or table with model name and parameters
+    --   model = { model = "gpt-4o", temperature = 0.8, top_p = 1, n = 1 },
+    --   -- system prompt (use this to specify the persona/role of the AI)
+    --   system_prompt = require("gp.defaults").code_system_prompt,
+    -- },
+    -- {
+    --   provider = "googleai",
+    --   name = "CodeGemini",
+    --   chat = false,
+    --   command = true,
+    --   -- string with model name or table with model name and parameters
+    --   model = { model = "gemini-pro", temperature = 0.8, top_p = 1 },
+    --   system_prompt = require("gp.defaults").code_system_prompt,
+    -- },
+    -- {
+    --   provider = "pplx",
+    --   name = "CodePerplexityLlama3.1-8B",
+    --   chat = false,
+    --   command = true,
+    --   -- string with model name or table with model name and parameters
+    --   model = { model = "llama-3.1-sonar-small-128k-chat", temperature = 0.8, top_p = 1 },
+    --   system_prompt = require("gp.defaults").code_system_prompt,
+    -- },
+    {
+      provider = "anthropic",
+      name = "CodeClaude-3-5-Sonnet",
+      chat = false,
+      command = true,
+      -- string with model name or table with model name and parameters
+      model = { model = "claude-3-5-sonnet-20240620", temperature = 0.8, top_p = 1 },
+      system_prompt = require("gp.defaults").code_system_prompt,
+    },
+    {
+      provider = "anthropic",
+      name = "CodeClaude-3-Haiku",
+      chat = false,
+      command = true,
+      -- string with model name or table with model name and parameters
+      model = { model = "claude-3-haiku-20240307", temperature = 0.8, top_p = 1 },
+      system_prompt = require("gp.defaults").code_system_prompt,
+    },
+    -- {
+    --   provider = "ollama",
+    --   name = "CodeOllamaLlama3.1-8B",
+    --   chat = false,
+    --   command = true,
+    --   -- string with model name or table with model name and parameters
+    --   model = {
+    --     model = "llama3.1",
+    --     temperature = 0.4,
+    --     top_p = 1,
+    --     min_p = 0.05,
+    --   },
+    --   -- system prompt (use this to specify the persona/role of the AI)
+    --   system_prompt = require("gp.defaults").code_system_prompt,
+    -- },
   },
 
   -- directory for storing chat files
   chat_dir = vim.fn.stdpath("data"):gsub("/$", "") .. "/gp/chats",
   -- chat user prompt prefix
-  chat_user_prefix = "🗨:",
+  chat_user_prefix = "💬:",
   -- chat assistant prompt prefix (static string or a table {static, template})
   -- first string has to be static, second string can contain template {{agent}}
   -- just a static string is legacy and the [{{agent}}] element is added automatically
   -- if you really want just a static string, make it a table with one element { "🤖:" }
   chat_assistant_prefix = { "🤖:", "[{{agent}}]" },
+  -- The banner shown at the top of each chat file.
+  chat_template = require("gp.defaults").chat_template,
+  -- if you want more real estate in your chat files and don't need the helper text
+  -- chat_template = require("gp.defaults").short_chat_template,
   -- chat topic generation prompt
   chat_topic_gen_prompt = "Summarize the topic of our conversation above"
     .. " in two or three words. Respond only with those words.",
   -- chat topic model (string with model name or table with model name and parameters)
-  chat_topic_gen_model = "gpt-3.5-turbo-16k",
   -- explicitly confirm deletion of a chat file
   chat_confirm_delete = true,
   -- conceal model parameters in chat
@@ -153,14 +332,20 @@ M.config = {
   chat_shortcut_new = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>c" },
   -- default search term when using :GpChatFinder
   chat_finder_pattern = "topic ",
+  chat_finder_mappings = {
+    delete = { modes = { "n", "i", "v", "x" }, shortcut = "<C-d>" },
+  },
   -- if true, finished ChatResponder won't move the cursor to the end of the buffer
   chat_free_cursor = false,
+  -- use prompt buftype for chats (:h prompt-buffer)
+  chat_prompt_buf_type = false,
 
-  -- how to display GpChatToggle or GpContext: popup / split / vsplit / tabnew
+  -- how to display GpChatToggle or GpContext
+  ---@type "popup" | "split" | "vsplit" | "tabnew"
   toggle_target = "vsplit",
 
   -- styling for chatfinder
-  -- border can be "single", "double", "rounded", "solid", "shadow", "none"
+  ---@type "single" | "double" | "rounded" | "solid" | "shadow" | "none"
   style_chat_finder_border = "single",
   -- margins are number of characters or lines
   style_chat_finder_margin_bottom = 8,
@@ -171,7 +356,7 @@ M.config = {
   style_chat_finder_preview_ratio = 0.5,
 
   -- styling for popup
-  -- border can be "single", "double", "rounded", "solid", "shadow", "none"
+  ---@type "single" | "double" | "rounded" | "solid" | "shadow" | "none"
   style_popup_border = "single",
   -- margins are number of characters or lines
   style_popup_margin_bottom = 8,
@@ -180,7 +365,10 @@ M.config = {
   style_popup_margin_top = 2,
   style_popup_max_width = 160,
 
-  -- command config and templates bellow are used by commands like GpRewrite, GpEnew, etc.
+  -- in case of visibility colisions with other plugins, you can increase/decrease zindex
+  zindex = 49,
+
+  -- command config and templates below are used by commands like GpRewrite, GpEnew, etc.
   -- command prompt prefix for asking user for input (supports {{agent}} template variable)
   command_prompt_prefix_template = "🤖 {{agent}} ~ ",
   -- auto select command response (easier chaining of commands)
@@ -205,130 +393,176 @@ M.config = {
   -- Whisper costs $0.006 / minute (rounded to the nearest second)
   -- by eliminating silence and speeding up the tempo of the recording
   -- we can reduce the cost by 50% or more and get the results faster
-  -- directory for storing whisper files
-  whisper_dir = (os.getenv "TMPDIR" or os.getenv "TEMP" or "/tmp") .. "/gp_whisper",
-  -- multiplier of RMS level dB for threshold used by sox to detect silence vs speech
-  -- decibels are negative, the recording is normalized to -3dB =>
-  -- increase this number to pick up more (weaker) sounds as possible speech
-  -- decrease this number to pick up only louder sounds as possible speech
-  -- you can disable silence trimming by setting this a very high number (like 1000.0)
-  whisper_silence = "1.75",
-  -- whisper max recording time (mm:ss)
-  whisper_rec_cmd = "05:00",
-  -- whisper tempo (1.0 is normal speed)
-  whisper_tempo = "1.75",
-  -- The language of the input audio, in ISO-639-1 format.
-  whisper_language = "en",
+
+  whisper = {
+    -- you can disable whisper completely by whisper = {disable = true}
+    disable = false,
+
+    -- OpenAI audio/transcriptions api endpoint to transcribe audio to text
+    endpoint = "https://api.openai.com/v1/audio/transcriptions",
+    -- directory for storing whisper files
+    store_dir = (os.getenv "TMPDIR" or os.getenv "TEMP" or "/tmp") .. "/gp_whisper",
+    -- multiplier of RMS level dB for threshold used by sox to detect silence vs speech
+    -- decibels are negative, the recording is normalized to -3dB =>
+    -- increase this number to pick up more (weaker) sounds as possible speech
+    -- decrease this number to pick up only louder sounds as possible speech
+    -- you can disable silence trimming by setting this a very high number (like 1000.0)
+    silence = "1.75",
+    -- whisper tempo (1.0 is normal speed)
+    tempo = "1.75",
+    -- The language of the input audio, in ISO-639-1 format.
+    language = "en",
+    -- command to use for recording can be nil (unset) for automatic selection
+    -- string ("sox", "arecord", "ffmpeg") or table with command and arguments:
+    -- sox is the most universal, but can have start/end cropping issues caused by latency
+    -- arecord is linux only, but has no cropping issues and is faster
+    -- ffmpeg in the default configuration is macos only, but can be used on any platform
+    -- (see https://trac.ffmpeg.org/wiki/Capture/Desktop for more info)
+    -- below is the default configuration for all three commands:
+    -- whisper_rec_cmd = {"sox", "-c", "1", "--buffer", "32", "-d", "rec.wav", "trim", "0", "60:00"},
+    -- whisper_rec_cmd = {"arecord", "-c", "1", "-f", "S16_LE", "-r", "48000", "-d", "3600", "rec.wav"},
+    -- whisper_rec_cmd = {"ffmpeg", "-y", "-f", "avfoundation", "-i", ":0", "-t", "3600", "rec.wav"},
+    rec_cmd = nil,
+  },
 
   -- image generation settings
-  -- image prompt prefix for asking user for input (supports {{agent}} template variable)
-  image_prompt_prefix_template = "🖌️ {{agent}} ~ ",
-  -- image prompt prefix for asking location to save the image
-  image_prompt_save = "🖌️💾 ~ ",
-  -- default folder for saving images
-  image_dir = (os.getenv "TMPDIR" or os.getenv "TEMP" or "/tmp") .. "/gp_images",
-  -- default image agents (model + settings)
-  -- to remove some default agent completely set it just with the name like:
-  -- image_agents = {  { name = "DALL-E-3-1024x1792-vivid" }, ... },
-  image_agents = {
-    {
-      name = "DALL-E-3-1024x1024-vivid",
-      model = "dall-e-3",
-      quality = "standard",
-      style = "vivid",
-      size = "1024x1024",
-    },
-    {
-      name = "DALL-E-3-1792x1024-vivid",
-      model = "dall-e-3",
-      quality = "standard",
-      style = "vivid",
-      size = "1792x1024",
-    },
-    {
-      name = "DALL-E-3-1024x1792-vivid",
-      model = "dall-e-3",
-      quality = "standard",
-      style = "vivid",
-      size = "1024x1792",
-    },
-    {
-      name = "DALL-E-3-1024x1024-natural",
-      model = "dall-e-3",
-      quality = "standard",
-      style = "natural",
-      size = "1024x1024",
-    },
-    {
-      name = "DALL-E-3-1792x1024-natural",
-      model = "dall-e-3",
-      quality = "standard",
-      style = "natural",
-      size = "1792x1024",
-    },
-    {
-      name = "DALL-E-3-1024x1792-natural",
-      model = "dall-e-3",
-      quality = "standard",
-      style = "natural",
-      size = "1024x1792",
-    },
-    {
-      name = "DALL-E-3-1024x1024-vivid-hd",
-      model = "dall-e-3",
-      quality = "hd",
-      style = "vivid",
-      size = "1024x1024",
-    },
-    {
-      name = "DALL-E-3-1792x1024-vivid-hd",
-      model = "dall-e-3",
-      quality = "hd",
-      style = "vivid",
-      size = "1792x1024",
-    },
-    {
-      name = "DALL-E-3-1024x1792-vivid-hd",
-      model = "dall-e-3",
-      quality = "hd",
-      style = "vivid",
-      size = "1024x1792",
-    },
-    {
-      name = "DALL-E-3-1024x1024-natural-hd",
-      model = "dall-e-3",
-      quality = "hd",
-      style = "natural",
-      size = "1024x1024",
-    },
-    {
-      name = "DALL-E-3-1792x1024-natural-hd",
-      model = "dall-e-3",
-      quality = "hd",
-      style = "natural",
-      size = "1792x1024",
-    },
-    {
-      name = "DALL-E-3-1024x1792-natural-hd",
-      model = "dall-e-3",
-      quality = "hd",
-      style = "natural",
-      size = "1024x1792",
+  image = {
+    -- you can disable image generation logic completely by image = {disable = true}
+    disable = false,
+
+    -- openai api key (string or table with command and arguments)
+    -- secret = { "cat", "path_to/openai_api_key" },
+    -- secret = { "bw", "get", "password", "OPENAI_API_KEY" },
+    -- secret =  "sk-...",
+    -- secret = os.getenv("env_name.."),
+    -- if missing openai_api_key is used
+    secret = os.getenv "OPENAI_API_KEY",
+
+    -- image prompt prefix for asking user for input (supports {{agent}} template variable)
+    prompt_prefix_template = "🖌️ {{agent}} ~ ",
+    -- image prompt prefix for asking location to save the image
+    prompt_save = "🖌️💾 ~ ",
+    -- default folder for saving images
+    store_dir = (os.getenv "TMPDIR" or os.getenv "TEMP" or "/tmp") .. "/gp_images",
+    -- default image agents (model + settings)
+    -- to remove some default agent completely set it like:
+    -- image.agents = {  { name = "DALL-E-3-1024x1792-vivid", disable = true, }, ... },
+    agents = {
+      {
+        name = "ExampleDisabledAgent",
+        disable = true,
+      },
+      {
+        name = "DALL-E-3-1024x1024-vivid",
+        model = "dall-e-3",
+        quality = "standard",
+        style = "vivid",
+        size = "1024x1024",
+      },
+      {
+        name = "DALL-E-3-1792x1024-vivid",
+        model = "dall-e-3",
+        quality = "standard",
+        style = "vivid",
+        size = "1792x1024",
+      },
+      {
+        name = "DALL-E-3-1024x1792-vivid",
+        model = "dall-e-3",
+        quality = "standard",
+        style = "vivid",
+        size = "1024x1792",
+      },
+      {
+        name = "DALL-E-3-1024x1024-natural",
+        model = "dall-e-3",
+        quality = "standard",
+        style = "natural",
+        size = "1024x1024",
+      },
+      {
+        name = "DALL-E-3-1792x1024-natural",
+        model = "dall-e-3",
+        quality = "standard",
+        style = "natural",
+        size = "1792x1024",
+      },
+      {
+        name = "DALL-E-3-1024x1792-natural",
+        model = "dall-e-3",
+        quality = "standard",
+        style = "natural",
+        size = "1024x1792",
+      },
+      {
+        name = "DALL-E-3-1024x1024-vivid-hd",
+        model = "dall-e-3",
+        quality = "hd",
+        style = "vivid",
+        size = "1024x1024",
+      },
+      {
+        name = "DALL-E-3-1792x1024-vivid-hd",
+        model = "dall-e-3",
+        quality = "hd",
+        style = "vivid",
+        size = "1792x1024",
+      },
+      {
+        name = "DALL-E-3-1024x1792-vivid-hd",
+        model = "dall-e-3",
+        quality = "hd",
+        style = "vivid",
+        size = "1024x1792",
+      },
+      {
+        name = "DALL-E-3-1024x1024-natural-hd",
+        model = "dall-e-3",
+        quality = "hd",
+        style = "natural",
+        size = "1024x1024",
+      },
+      {
+        name = "DALL-E-3-1792x1024-natural-hd",
+        model = "dall-e-3",
+        quality = "hd",
+        style = "natural",
+        size = "1792x1024",
+      },
+      {
+        name = "DALL-E-3-1024x1792-natural-hd",
+        model = "dall-e-3",
+        quality = "hd",
+        style = "natural",
+        size = "1024x1792",
+      },
     },
   },
 
   -- example hook functions (see Extend functionality section in the README)
   hooks = {
+    -- GpInspectPlugin provides a detailed inspection of the plugin state
     InspectPlugin = function(plugin, params)
       local bufnr = vim.api.nvim_create_buf(false, true)
       local copy = vim.deepcopy(plugin)
-      local key = copy.config.openai_api_key
+      local key = copy.config.openai_api_key or ""
       copy.config.openai_api_key = key:sub(1, 3) .. string.rep("*", #key - 6) .. key:sub(-3)
       local plugin_info = string.format("Plugin structure:\n%s", vim.inspect(copy))
       local params_info = string.format("Command params:\n%s", vim.inspect(params))
       local lines = vim.split(plugin_info .. "\n" .. params_info, "\n")
       vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
       vim.api.nvim_win_set_buf(0, bufnr)
+    end,
+
+    -- GpInspectLog for checking the log file
+    InspectLog = function(plugin, params)
+      local log_file = plugin.config.log_file
+      local buffer = plugin.helpers.get_buffer(log_file)
+      if not buffer then
+        vim.cmd("e " .. log_file)
+      else
+        vim.cmd("buffer " .. buffer)
+      end
     end,
 
     -- GpImplement rewrites the provided selection/range based on comments in it
@@ -339,35 +573,15 @@ M.config = {
         .. "\n\nRespond exclusively with the snippet that should replace the selection above."
 
       local agent = gp.get_command_agent()
-      gp.info("Implementing selection with agent: " .. agent.name)
+      gp.logger.info("Implementing selection with agent: " .. agent.name)
 
       gp.Prompt(
         params,
         gp.Target.rewrite,
-        nil, -- command will run directly without any prompting for user input
-        agent.model,
+        agent,
         template,
-        agent.system_prompt
-      )
-    end,
-
-    -- Nice JSDOC with examples
-    Jsdoc = function(gp, params)
-      local template = "Having following from {{filename}}:\n\n"
-        .. "```{{filetype}}\n{{selection}}\n```\n\n"
-        .. "Create a nice JSDOC with some examples. I just need the jsdoc, not the code itself"
-        .. "\n\nRespond exclusively with the snippet that should replace the selection above."
-
-      local agent = gp.get_command_agent()
-      gp.info("JSDOC selection with agent: " .. agent.name)
-
-      gp.Prompt(
-        params,
-        gp.Target.prepend,
         nil, -- command will run directly without any prompting for user input
-        agent.model,
-        template,
-        agent.system_prompt
+        nil -- no predefined instructions (e.g. speech-to-text from Whisper)
       )
     end,
 
@@ -376,26 +590,29 @@ M.config = {
 
     -- -- example of making :%GpChatNew a dedicated command which
     -- -- opens new chat with the entire current buffer as a context
-    -- BufferChatNew = function(gp, _)
-    -- 	-- call GpChatNew command in range mode on whole buffer
-    -- 	vim.api.nvim_command("%" .. gp.config.cmd_prefix .. "ChatNew")
-    -- end,
+    BufferChatNew = function(gp, _)
+      -- call GpChatNew command in range mode on whole buffer
+      vim.api.nvim_command("%" .. gp.config.cmd_prefix .. "ChatNew")
+    end,
 
     -- -- example of adding command which opens new chat dedicated for translation
     -- Translator = function(gp, params)
-    -- 	local agent = gp.get_command_agent()
     -- 	local chat_system_prompt = "You are a Translator, please translate between English and Chinese."
-    -- 	gp.cmd.ChatNew(params, agent.model, chat_system_prompt)
+    -- 	gp.cmd.ChatNew(params, chat_system_prompt)
+    --
+    -- 	-- -- you can also create a chat with a specific fixed agent like this:
+    -- 	-- local agent = gp.get_chat_agent("ChatGPT4o")
+    -- 	-- gp.cmd.ChatNew(params, chat_system_prompt, agent)
     -- end,
 
     -- -- example of adding command which writes unit tests for the selected code
-    -- UnitTests = function(gp, params)
-    -- 	local template = "I have the following code from {{filename}}:\n\n"
-    -- 		.. "```{{filetype}}\n{{selection}}\n```\n\n"
-    -- 		.. "Please respond by writing table driven unit tests for the code above."
-    -- 	local agent = gp.get_command_agent()
-    -- 	gp.Prompt(params, gp.Target.enew, nil, agent.model, template, agent.system_prompt)
-    -- end,
+    UnitTests = function(gp, params)
+      local template = "I have the following code from {{filename}}:\n\n"
+        .. "```{{filetype}}\n{{selection}}\n```\n\n"
+        .. "Please respond by writing table driven unit tests for the code above."
+      local agent = gp.get_command_agent()
+      gp.Prompt(params, gp.Target.enew, agent, template)
+    end,
 
     -- -- example of adding command which explains the selected code
     Explain = function(gp, params)
@@ -403,175 +620,129 @@ M.config = {
         .. "```{{filetype}}\n{{selection}}\n```\n\n"
         .. "Please respond by explaining the code above."
       local agent = gp.get_chat_agent()
-      gp.Prompt(params, gp.Target.popup, nil, agent.model, template, agent.system_prompt)
+      gp.Prompt(params, gp.Target.popup, agent, template)
     end,
 
+    -- example of usig enew as a function specifying type for the new buffer
     CodeReview = function(gp, params)
       local template = "I have the following code from {{filename}}:\n\n"
         .. "```{{filetype}}\n{{selection}}\n```\n\n"
         .. "Please analyze for code smells and suggest improvements."
       local agent = gp.get_chat_agent()
-      gp.Prompt(params, gp.Target.enew "markdown", nil, agent.model, template, agent.system_prompt)
+      gp.Prompt(params, gp.Target.enew "markdown", agent, template)
     end,
   },
 }
 
 M.mappings = function()
-  require("which-key").register({
-    -- ...
-    ["<C-g>"] = {
-      c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
-      p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
-      t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
-
-      ["<C-x>"] = { ":<C-u>'<,'>GpChatNew split<cr>", "Visual Chat New split" },
-      ["<C-v>"] = { ":<C-u>'<,'>GpChatNew vsplit<cr>", "Visual Chat New vsplit" },
-      ["<C-t>"] = { ":<C-u>'<,'>GpChatNew tabnew<cr>", "Visual Chat New tabnew" },
-
-      r = { ":<C-u>'<,'>GpRewrite<cr>", "Visual Rewrite" },
-      a = { ":<C-u>'<,'>GpAppend<cr>", "Visual Append (after)" },
-      b = { ":<C-u>'<,'>GpPrepend<cr>", "Visual Prepend (before)" },
-      i = { ":<C-u>'<,'>GpImplement<cr>", "Implement selection" },
-
-      g = {
-        name = "generate into new ..",
-        p = { ":<C-u>'<,'>GpPopup<cr>", "Visual Popup" },
-        e = { ":<C-u>'<,'>GpEnew<cr>", "Visual GpEnew" },
-        n = { ":<C-u>'<,'>GpNew<cr>", "Visual GpNew" },
-        v = { ":<C-u>'<,'>GpVnew<cr>", "Visual GpVnew" },
-        t = { ":<C-u>'<,'>GpTabnew<cr>", "Visual GpTabnew" },
-      },
-
-      n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
-      s = { "<cmd>GpStop<cr>", "GpStop" },
-      x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
-
-      w = {
-        name = "Whisper",
-        w = { ":<C-u>'<,'>GpWhisper<cr>", "Whisper" },
-        r = { ":<C-u>'<,'>GpWhisperRewrite<cr>", "Whisper Rewrite" },
-        a = { ":<C-u>'<,'>GpWhisperAppend<cr>", "Whisper Append (after)" },
-        b = { ":<C-u>'<,'>GpWhisperPrepend<cr>", "Whisper Prepend (before)" },
-        p = { ":<C-u>'<,'>GpWhisperPopup<cr>", "Whisper Popup" },
-        e = { ":<C-u>'<,'>GpWhisperEnew<cr>", "Whisper Enew" },
-        n = { ":<C-u>'<,'>GpWhisperNew<cr>", "Whisper New" },
-        v = { ":<C-u>'<,'>GpWhisperVnew<cr>", "Whisper Vnew" },
-        t = { ":<C-u>'<,'>GpWhisperTabnew<cr>", "Whisper Tabnew" },
-      },
+  require("which-key").add {
+    -- VISUAL mode mappings
+    -- s, x, v modes are handled the same way by which_key
+    {
+      mode = { "v" },
+      nowait = true,
+      remap = false,
+      { "<C-g><C-t>", ":<C-u>'<,'>GpChatNew tabnew<cr>", desc = "ChatNew tabnew" },
+      { "<C-g><C-v>", ":<C-u>'<,'>GpChatNew vsplit<cr>", desc = "ChatNew vsplit" },
+      { "<C-g><C-x>", ":<C-u>'<,'>GpChatNew split<cr>", desc = "ChatNew split" },
+      { "<C-g>a", ":<C-u>'<,'>GpAppend<cr>", desc = "Visual Append (after)" },
+      { "<C-g>b", ":<C-u>'<,'>GpPrepend<cr>", desc = "Visual Prepend (before)" },
+      { "<C-g>c", ":<C-u>'<,'>GpChatNew<cr>", desc = "Visual Chat New" },
+      { "<C-g>g", group = "generate into new .." },
+      { "<C-g>ge", ":<C-u>'<,'>GpEnew<cr>", desc = "Visual GpEnew" },
+      { "<C-g>gn", ":<C-u>'<,'>GpNew<cr>", desc = "Visual GpNew" },
+      { "<C-g>gp", ":<C-u>'<,'>GpPopup<cr>", desc = "Visual Popup" },
+      { "<C-g>gt", ":<C-u>'<,'>GpTabnew<cr>", desc = "Visual GpTabnew" },
+      { "<C-g>gv", ":<C-u>'<,'>GpVnew<cr>", desc = "Visual GpVnew" },
+      { "<C-g>i", ":<C-u>'<,'>GpImplement<cr>", desc = "Implement selection" },
+      { "<C-g>n", "<cmd>GpNextAgent<cr>", desc = "Next Agent" },
+      { "<C-g>p", ":<C-u>'<,'>GpChatPaste<cr>", desc = "Visual Chat Paste" },
+      { "<C-g>r", ":<C-u>'<,'>GpRewrite<cr>", desc = "Visual Rewrite" },
+      { "<C-g>s", "<cmd>GpStop<cr>", desc = "GpStop" },
+      { "<C-g>t", ":<C-u>'<,'>GpChatToggle<cr>", desc = "Visual Toggle Chat" },
+      { "<C-g>w", group = "Whisper" },
+      { "<C-g>wa", ":<C-u>'<,'>GpWhisperAppend<cr>", desc = "Whisper Append" },
+      { "<C-g>wb", ":<C-u>'<,'>GpWhisperPrepend<cr>", desc = "Whisper Prepend" },
+      { "<C-g>we", ":<C-u>'<,'>GpWhisperEnew<cr>", desc = "Whisper Enew" },
+      { "<C-g>wn", ":<C-u>'<,'>GpWhisperNew<cr>", desc = "Whisper New" },
+      { "<C-g>wp", ":<C-u>'<,'>GpWhisperPopup<cr>", desc = "Whisper Popup" },
+      { "<C-g>wr", ":<C-u>'<,'>GpWhisperRewrite<cr>", desc = "Whisper Rewrite" },
+      { "<C-g>wt", ":<C-u>'<,'>GpWhisperTabnew<cr>", desc = "Whisper Tabnew" },
+      { "<C-g>wv", ":<C-u>'<,'>GpWhisperVnew<cr>", desc = "Whisper Vnew" },
+      { "<C-g>ww", ":<C-u>'<,'>GpWhisper<cr>", desc = "Whisper" },
+      { "<C-g>x", ":<C-u>'<,'>GpContext<cr>", desc = "Visual GpContext" },
     },
-    -- ...
-  }, {
-    mode = "v", -- VISUAL mode
-    prefix = "",
-    buffer = nil,
-    silent = true,
-    noremap = true,
-    nowait = true,
-  })
 
-  -- NORMAL mode mappings
-  require("which-key").register({
-    -- ...
-    ["<C-g>"] = {
-      c = { "<cmd>GpChatNew<cr>", "New Chat" },
-      t = { "<cmd>GpChatToggle<cr>", "Toggle Chat" },
-      f = { "<cmd>GpChatFinder<cr>", "Chat Finder" },
-
-      ["<C-x>"] = { "<cmd>GpChatNew split<cr>", "New Chat split" },
-      ["<C-v>"] = { "<cmd>GpChatNew vsplit<cr>", "New Chat vsplit" },
-      ["<C-t>"] = { "<cmd>GpChatNew tabnew<cr>", "New Chat tabnew" },
-
-      r = { "<cmd>GpRewrite<cr>", "Inline Rewrite" },
-      a = { "<cmd>GpAppend<cr>", "Append (after)" },
-      b = { "<cmd>GpPrepend<cr>", "Prepend (before)" },
-
-      g = {
-        name = "generate into new ..",
-        p = { "<cmd>GpPopup<cr>", "Popup" },
-        e = { "<cmd>GpEnew<cr>", "GpEnew" },
-        n = { "<cmd>GpNew<cr>", "GpNew" },
-        v = { "<cmd>GpVnew<cr>", "GpVnew" },
-        t = { "<cmd>GpTabnew<cr>", "GpTabnew" },
-      },
-
-      n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
-      s = { "<cmd>GpStop<cr>", "GpStop" },
-      x = { "<cmd>GpContext<cr>", "Toggle GpContext" },
-
-      w = {
-        name = "Whisper",
-        w = { "<cmd>GpWhisper<cr>", "Whisper" },
-        r = { "<cmd>GpWhisperRewrite<cr>", "Whisper Inline Rewrite" },
-        a = { "<cmd>GpWhisperAppend<cr>", "Whisper Append (after)" },
-        b = { "<cmd>GpWhisperPrepend<cr>", "Whisper Prepend (before)" },
-        p = { "<cmd>GpWhisperPopup<cr>", "Whisper Popup" },
-        e = { "<cmd>GpWhisperEnew<cr>", "Whisper Enew" },
-        n = { "<cmd>GpWhisperNew<cr>", "Whisper New" },
-        v = { "<cmd>GpWhisperVnew<cr>", "Whisper Vnew" },
-        t = { "<cmd>GpWhisperTabnew<cr>", "Whisper Tabnew" },
-      },
+    -- NORMAL mode mappings
+    {
+      mode = { "n" },
+      nowait = true,
+      remap = false,
+      { "<C-g><C-t>", "<cmd>GpChatNew tabnew<cr>", desc = "New Chat tabnew" },
+      { "<C-g><C-v>", "<cmd>GpChatNew vsplit<cr>", desc = "New Chat vsplit" },
+      { "<C-g><C-x>", "<cmd>GpChatNew split<cr>", desc = "New Chat split" },
+      { "<C-g>a", "<cmd>GpAppend<cr>", desc = "Append (after)" },
+      { "<C-g>b", "<cmd>GpPrepend<cr>", desc = "Prepend (before)" },
+      { "<C-g>c", "<cmd>GpChatNew<cr>", desc = "New Chat" },
+      { "<C-g>f", "<cmd>GpChatFinder<cr>", desc = "Chat Finder" },
+      { "<C-g>g", group = "generate into new .." },
+      { "<C-g>ge", "<cmd>GpEnew<cr>", desc = "GpEnew" },
+      { "<C-g>gn", "<cmd>GpNew<cr>", desc = "GpNew" },
+      { "<C-g>gp", "<cmd>GpPopup<cr>", desc = "Popup" },
+      { "<C-g>gt", "<cmd>GpTabnew<cr>", desc = "GpTabnew" },
+      { "<C-g>gv", "<cmd>GpVnew<cr>", desc = "GpVnew" },
+      { "<C-g>n", "<cmd>GpNextAgent<cr>", desc = "Next Agent" },
+      { "<C-g>r", "<cmd>GpRewrite<cr>", desc = "Inline Rewrite" },
+      { "<C-g>s", "<cmd>GpStop<cr>", desc = "GpStop" },
+      { "<C-g>t", "<cmd>GpChatToggle<cr>", desc = "Toggle Chat" },
+      { "<C-g>w", group = "Whisper" },
+      { "<C-g>wa", "<cmd>GpWhisperAppend<cr>", desc = "Whisper Append (after)" },
+      { "<C-g>wb", "<cmd>GpWhisperPrepend<cr>", desc = "Whisper Prepend (before)" },
+      { "<C-g>we", "<cmd>GpWhisperEnew<cr>", desc = "Whisper Enew" },
+      { "<C-g>wn", "<cmd>GpWhisperNew<cr>", desc = "Whisper New" },
+      { "<C-g>wp", "<cmd>GpWhisperPopup<cr>", desc = "Whisper Popup" },
+      { "<C-g>wr", "<cmd>GpWhisperRewrite<cr>", desc = "Whisper Inline Rewrite" },
+      { "<C-g>wt", "<cmd>GpWhisperTabnew<cr>", desc = "Whisper Tabnew" },
+      { "<C-g>wv", "<cmd>GpWhisperVnew<cr>", desc = "Whisper Vnew" },
+      { "<C-g>ww", "<cmd>GpWhisper<cr>", desc = "Whisper" },
+      { "<C-g>x", "<cmd>GpContext<cr>", desc = "Toggle GpContext" },
     },
-    -- ...
-  }, {
-    mode = "n", -- NORMAL mode
-    prefix = "",
-    buffer = nil,
-    silent = true,
-    noremap = true,
-    nowait = true,
-  })
 
-  -- INSERT mode mappings
-  require("which-key").register({
-    -- ...
-    ["<C-g>"] = {
-      c = { "<cmd>GpChatNew<cr>", "New Chat" },
-      t = { "<cmd>GpChatToggle<cr>", "Toggle Chat" },
-      f = { "<cmd>GpChatFinder<cr>", "Chat Finder" },
-
-      ["<C-x>"] = { "<cmd>GpChatNew split<cr>", "New Chat split" },
-      ["<C-v>"] = { "<cmd>GpChatNew vsplit<cr>", "New Chat vsplit" },
-      ["<C-t>"] = { "<cmd>GpChatNew tabnew<cr>", "New Chat tabnew" },
-
-      r = { "<cmd>GpRewrite<cr>", "Inline Rewrite" },
-      a = { "<cmd>GpAppend<cr>", "Append (after)" },
-      b = { "<cmd>GpPrepend<cr>", "Prepend (before)" },
-
-      g = {
-        name = "generate into new ..",
-        p = { "<cmd>GpPopup<cr>", "Popup" },
-        e = { "<cmd>GpEnew<cr>", "GpEnew" },
-        n = { "<cmd>GpNew<cr>", "GpNew" },
-        v = { "<cmd>GpVnew<cr>", "GpVnew" },
-        t = { "<cmd>GpTabnew<cr>", "GpTabnew" },
-      },
-
-      x = { "<cmd>GpContext<cr>", "Toggle GpContext" },
-      s = { "<cmd>GpStop<cr>", "GpStop" },
-      n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
-
-      w = {
-        name = "Whisper",
-        w = { "<cmd>GpWhisper<cr>", "Whisper" },
-        r = { "<cmd>GpWhisperRewrite<cr>", "Whisper Inline Rewrite" },
-        a = { "<cmd>GpWhisperAppend<cr>", "Whisper Append (after)" },
-        b = { "<cmd>GpWhisperPrepend<cr>", "Whisper Prepend (before)" },
-        p = { "<cmd>GpWhisperPopup<cr>", "Whisper Popup" },
-        e = { "<cmd>GpWhisperEnew<cr>", "Whisper Enew" },
-        n = { "<cmd>GpWhisperNew<cr>", "Whisper New" },
-        v = { "<cmd>GpWhisperVnew<cr>", "Whisper Vnew" },
-        t = { "<cmd>GpWhisperTabnew<cr>", "Whisper Tabnew" },
-      },
+    -- INSERT mode mappings
+    {
+      mode = { "i" },
+      nowait = true,
+      remap = false,
+      { "<C-g><C-t>", "<cmd>GpChatNew tabnew<cr>", desc = "New Chat tabnew" },
+      { "<C-g><C-v>", "<cmd>GpChatNew vsplit<cr>", desc = "New Chat vsplit" },
+      { "<C-g><C-x>", "<cmd>GpChatNew split<cr>", desc = "New Chat split" },
+      { "<C-g>a", "<cmd>GpAppend<cr>", desc = "Append (after)" },
+      { "<C-g>b", "<cmd>GpPrepend<cr>", desc = "Prepend (before)" },
+      { "<C-g>c", "<cmd>GpChatNew<cr>", desc = "New Chat" },
+      { "<C-g>f", "<cmd>GpChatFinder<cr>", desc = "Chat Finder" },
+      { "<C-g>g", group = "generate into new .." },
+      { "<C-g>ge", "<cmd>GpEnew<cr>", desc = "GpEnew" },
+      { "<C-g>gn", "<cmd>GpNew<cr>", desc = "GpNew" },
+      { "<C-g>gp", "<cmd>GpPopup<cr>", desc = "Popup" },
+      { "<C-g>gt", "<cmd>GpTabnew<cr>", desc = "GpTabnew" },
+      { "<C-g>gv", "<cmd>GpVnew<cr>", desc = "GpVnew" },
+      { "<C-g>n", "<cmd>GpNextAgent<cr>", desc = "Next Agent" },
+      { "<C-g>r", "<cmd>GpRewrite<cr>", desc = "Inline Rewrite" },
+      { "<C-g>s", "<cmd>GpStop<cr>", desc = "GpStop" },
+      { "<C-g>t", "<cmd>GpChatToggle<cr>", desc = "Toggle Chat" },
+      { "<C-g>w", group = "Whisper" },
+      { "<C-g>wa", "<cmd>GpWhisperAppend<cr>", desc = "Whisper Append (after)" },
+      { "<C-g>wb", "<cmd>GpWhisperPrepend<cr>", desc = "Whisper Prepend (before)" },
+      { "<C-g>we", "<cmd>GpWhisperEnew<cr>", desc = "Whisper Enew" },
+      { "<C-g>wn", "<cmd>GpWhisperNew<cr>", desc = "Whisper New" },
+      { "<C-g>wp", "<cmd>GpWhisperPopup<cr>", desc = "Whisper Popup" },
+      { "<C-g>wr", "<cmd>GpWhisperRewrite<cr>", desc = "Whisper Inline Rewrite" },
+      { "<C-g>wt", "<cmd>GpWhisperTabnew<cr>", desc = "Whisper Tabnew" },
+      { "<C-g>wv", "<cmd>GpWhisperVnew<cr>", desc = "Whisper Vnew" },
+      { "<C-g>ww", "<cmd>GpWhisper<cr>", desc = "Whisper" },
+      { "<C-g>x", "<cmd>GpContext<cr>", desc = "Toggle GpContext" },
     },
-    -- ...
-  }, {
-    mode = "i", -- INSERT mode
-    prefix = "",
-    buffer = nil,
-    silent = true,
-    noremap = true,
-    nowait = true,
-  })
+  }
 end
 
 return M
