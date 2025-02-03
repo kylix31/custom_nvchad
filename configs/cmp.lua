@@ -123,6 +123,9 @@ M.config = {
     { name = "buffer", group_index = 2 },
     { name = "nvim_lua", group_index = 2 },
     { name = "path", group_index = 2 },
+    per_filetype = {
+      codecompanion = { "codecompanion" },
+    },
   },
   sorting = {
     priority_weight = 2,

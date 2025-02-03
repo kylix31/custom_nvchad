@@ -502,12 +502,23 @@ local plugins = {
     },
     config = function()
       require("codecompanion").setup {
+        adapters = {
+          gemini = function()
+            return require("codecompanion.adapters").extend("gemini", {
+              schema = {
+                model = {
+                  default = "gemini-2.0-flash-exp",
+                },
+              },
+            })
+          end,
+        },
         strategies = {
           chat = {
-            adapter = "openai",
+            adapter = "gemini",
           },
           inline = {
-            adapter = "openai",
+            adapter = "gemini",
           },
         },
       }
