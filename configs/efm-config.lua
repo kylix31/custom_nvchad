@@ -16,7 +16,9 @@ local default_languages = require("efmls-configs.defaults").languages()
 local stylelint = require "efmls-configs.linters.stylelint"
 local markdownlint = require "efmls-configs.linters.markdownlint"
 local yamllint = require "efmls-configs.linters.yamllint"
-local hadolint = require "efmls-configs.linters.hadolint"
+-- local hadolint = require "efmls-configs.linters.hadolint"
+local buf_lint = require "efmls-configs.linters.buf"
+-- local pylint = require "efmls-configs.linters.pylint"
 
 local eslint_d = require "efmls-configs.formatters.eslint_d"
 local prettier_d = require "efmls-configs.formatters.prettier_d"
@@ -27,6 +29,7 @@ local terraform_fmt = require "efmls-configs.formatters.terraform_fmt"
 local black = require "efmls-configs.formatters.black"
 local isort = require "efmls-configs.formatters.isort"
 local stylua = require "efmls-configs.formatters.stylua"
+local buf_formatter = require "efmls-configs.formatters.buf"
 -- local cbfmt = require "efmls-configs.formatters.cbfmt"
 local mdformat = require "efmls-configs.formatters.mdformat"
 
@@ -46,8 +49,9 @@ local efm_languages = {
   javascriptreact = { eslint_d, prettier_d },
   terraform = { terraform_fmt },
   python = { black, isort },
-  dockerfile = { hadolint },
+  -- dockerfile = { hadolint },
   lua = { stylua },
+  proto = { buf_formatter, buf_lint },
 }
 
 local M = {}

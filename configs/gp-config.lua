@@ -240,6 +240,16 @@ M.config = {
       -- system prompt (use this to specify the persona/role of the AI)
       system_prompt = "Please return ONLY code snippets.\nSTART AND END YOUR ANSWER WITH:\n\n```",
     },
+    {
+      provider = "openai",
+      name = "CodeO3-mini",
+      chat = true,
+      command = true,
+      -- string with model name or table with model name and parameters
+      model = { model = "o3-mini-2025-01-31", temperature = 0.7, top_p = 1 },
+      -- system prompt (use this to specify the persona/role of the AI)
+      system_prompt = "Please return ONLY code snippets.\nSTART AND END YOUR ANSWER WITH:\n\n```",
+    },
     -- {
     --   provider = "copilot",
     --   name = "CodeCopilot",

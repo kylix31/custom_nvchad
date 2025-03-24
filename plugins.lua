@@ -493,6 +493,7 @@ local plugins = {
   {
     "olimorris/codecompanion.nvim",
     dependencies = {
+      "j-hui/fidget.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
@@ -503,11 +504,11 @@ local plugins = {
     config = function()
       require("codecompanion").setup {
         adapters = {
-          gemini = function()
-            return require("codecompanion.adapters").extend("gemini", {
+          openai = function()
+            return require("codecompanion.adapters").extend("openai", {
               schema = {
                 model = {
-                  default = "gemini-2.0-flash-exp",
+                  default = "o3-mini-2025-01-31",
                 },
               },
             })
@@ -515,13 +516,34 @@ local plugins = {
         },
         strategies = {
           chat = {
-            adapter = "gemini",
+            slash_commands = {
+              ["file"] = {
+                callback = "strategies.chat.slash_commands.file",
+                description = "Select a file using Telescope",
+                opts = {
+                  provider = "telescope", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
+                  contains_code = true,
+                },
+              },
+              ["buffer"] = {
+                callback = "strategies.chat.slash_commands.buffer",
+                description = "Select a file using Telescope",
+                opts = {
+                  provider = "telescope", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
+                  contains_code = true,
+                },
+              },
+            },
+            adapter = "openai",
           },
           inline = {
-            adapter = "gemini",
+            adapter = "openai",
           },
         },
       }
+    end,
+    init = function()
+      require("custom.configs.fidget"):init()
     end,
     lazy = false,
   },
@@ -533,6 +555,12 @@ local plugins = {
     end,
     -- Example keymap
     -- vim.keymap.set("n", "<leader>ct", "<cmd>CopyTree<cr>", { desc = "Copy project structure from current directory" }),
+  },
+  { "echasnovski/mini.diff", version = "*" },
+  {
+    "j-hui/fidget.nvim",
+    lazy = false,
+    opts = {},
   },
 }
 

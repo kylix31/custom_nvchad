@@ -25,23 +25,60 @@ M.dap = function()
     command = "node",
     args = { os.getenv "HOME" .. "/dev/microsoft/vscode-node-debug2/out/src/nodeDebug.js" },
   }
+  dap.adapters["pwa-node"] = {
+    type = "server",
+    host = "localhost",
+    port = "${port}",
+    executable = {
+      command = "node",
+      -- 💀 Make sure to update this path to point to your installation
+      args = { "/usr/bin/js-debug-dap", "${port}" },
+    },
+  }
   dap.configurations.typescript = {
     {
-      -- name = "Launch",
-      -- type = "node",
-      -- request = "launch",
-      -- program = "${file}",
-      -- cwd = vim.fn.getcwd(),
-      -- sourceMaps = true,
-      -- protocol = "inspector",
-      -- console = "integratedTerminal",
-      name = "Docker: Attach to Node",
+      name = "Launch TypeScript with ts-node",
+      type = "pwa-node",
+      request = "launch",
+      runtimeArgs = { "-r", "ts-node/register" },
+      args = { "${file}" },
+      sourceMaps = true,
+      cwd = vim.fn.getcwd(),
+      protocol = "inspector",
+      resolveSourceMapLocations = {
+        "${workspaceFolder}/**",
+        "!**/node_modules/**",
+      },
+    },
+    {
+      name = "Docker: Attach to Node on Docker",
       type = "node2",
       request = "launch",
       port = 9229,
       remoteRoot = "/var/www/html",
       localRoot = "${workspaceFolder}",
       trace = true,
+    },
+    {
+      name = "Launch Compiled JavaScript",
+      type = "pwa-node",
+      request = "launch",
+      program = "${file}",
+      cwd = "${workspaceFolder}",
+      sourceMaps = true,
+      -- resolveSourceMapLocations = {
+      --   "${workspaceFolder}/**",
+      --   "!**/node_modules/**",
+      -- },
+    },
+  }
+  dap.configurations.javascript = {
+    {
+      name = "Launch file",
+      type = "pwa-node",
+      request = "launch",
+      program = "${file}",
+      cwd = "${workspaceFolder}",
     },
   }
 end
