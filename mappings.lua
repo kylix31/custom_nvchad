@@ -214,25 +214,25 @@ M.copilot_chat = {
   },
 }
 
-M.codecompanion = {
-  n = {
-    ["<C-a>"] = {
-      "<cmd>CodeCompanionActions<cr>",
-      "Open the codecompanion chat",
-    },
-    ["<leader>a"] = { "<cmd>CodeCompanionChat Toggle<cr>", "Toggle codecompanion chat" },
-  },
-  v = {
-    ["<C-a>"] = {
-      "<cmd>CodeCompanionActions<cr>",
-      "Open the codecompanion chat",
-    },
-    ["<leader>a"] = { "<cmd>CodeCompanionChat Toggle<cr>", "Toggle codecompanion chat" },
-    ["ga"] = {
-      "<cmd>CodeCompanionChat Add<cr>",
-      "Use the codecompanion chat add",
-    },
-  },
-}
+-- M.codecompanion = {
+--   n = {
+--     ["<C-a>"] = {
+--       "<cmd>CodeCompanionActions<cr>",
+--       "Open the codecompanion chat",
+--     },
+--     ["<leader>a"] = { "<cmd>CodeCompanionChat Toggle<cr>", "Toggle codecompanion chat" },
+--   },
+--   v = {
+--     ["<C-a>"] = {
+--       "<cmd>CodeCompanionActions<cr>",
+--       "Open the codecompanion chat",
+--     },
+--     ["<leader>a"] = { "<cmd>CodeCompanionChat Toggle<cr>", "Toggle codecompanion chat" },
+--     ["ga"] = {
+--       "<cmd>CodeCompanionChat Add<cr>",
+--       "Use the codecompanion chat add",
+--     },
+--   },
+-- }
 
 return M
