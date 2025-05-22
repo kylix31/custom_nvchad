@@ -63,6 +63,8 @@ M.general = {
     ["<leader>jf"] = { ":%!jq .<CR>", "format json" },
     ["<leader>jc"] = { ":%!jq -c .<CR>", "compact json" },
 
+    ["<leader>yt"] = { ":set ft=yaml <CR>", "set filetype to yaml" },
+
     ["sly"] = { '"+yy', "system line yank" },
     ["swy"] = { '"+yiw', "system word yank" },
   },

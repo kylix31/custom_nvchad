@@ -360,7 +360,7 @@ local plugins = {
     name = "barbecue",
     version = "*",
     dependencies = {
-      "SmiteshP/nvim-navic",
+      { "SmiteshP/nvim-navic", branch = "master", commit = "8649f694d3e76ee10c19255dece6411c29206a54" },
       "nvim-tree/nvim-web-devicons", -- optional dependency
     },
     config = function()
@@ -596,7 +596,7 @@ local plugins = {
       "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      -- "zbirenbaum/copilot.lua", -- for providers='copilot'
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",

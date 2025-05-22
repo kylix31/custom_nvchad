@@ -91,7 +91,36 @@ M.dap = function()
       -- Launch uvicorn as a module:
       module = "uvicorn",
       args = {
-        "glados.main:app", -- 'main:app' assumes your FastAPI instance is in main.py
+        "glados.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        -- Do not use "--reload" when debugging; reloading spawns a child process which
+        -- usually prevents the debugger from hitting breakpoints.
+      },
+      -- Set the working directory (adjust if needed)
+      cwd = vim.fn.getcwd(),
+
+      -- Optional: Specify which terminal to use:
+      -- console = "integratedTerminal",
+
+      -- (Optional) If you want to debug code in subprocesses:
+      -- subProcess = true,
+
+      -- (Optional) Set 'justMyCode' to false if you need to step into library code:
+      -- justMyCode = false,
+    },
+    {
+      -- Required attributes by nvim-dap:
+      type = "python", -- links this configuration to the nvim-dap-python adapter
+      request = "launch",
+      name = "Launch FastAPI (general)",
+
+      -- Launch uvicorn as a module:
+      module = "uvicorn",
+      args = {
+        "main:app",
         "--host",
         "0.0.0.0",
         "--port",

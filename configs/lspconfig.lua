@@ -29,6 +29,7 @@ local servers = {
   "kotlin_language_server",
   "protols",
   "dockerls",
+  "ruff",
   -- "pylsp",
 }
 
