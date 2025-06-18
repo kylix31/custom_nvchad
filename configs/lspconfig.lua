@@ -30,6 +30,7 @@ local servers = {
   "protols",
   "dockerls",
   "ruff",
+  "bashls",
   -- "pylsp",
 }
 

@@ -566,36 +566,53 @@ local plugins = {
     "yetone/avante.nvim",
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
+    debug = true,
     opts = {
       -- behaviour = {
       --   enable_claude_text_editor_tool_mode = true,
       -- },
       -- add any opts here
       -- for example
-      provider = "claude",
+      provider = "copilot",
       providers = {
-        ["aihubmix-claude3.5"] = {
-          __inherited_from = "claude",
-          endpoint = "https://aihubmix.com",
-          model = "claude-3-5-sonnet-latest",
-          api_key_name = "AIHUBMIX_API_KEY",
+        copilot = {
+          endpoint = "https://api.githubcopilot.com",
+          model = "gpt-4.1-2025-04-14",
+          proxy = nil, -- [protocol://]host[:port] Use this proxy
+          allow_insecure = false, -- Allow insecure server connections
+          timeout = 30000, -- Timeout in milliseconds
           extra_request_body = {
             temperature = 0.75,
-            max_tokens = 8192,
+            max_tokens = 20480,
           },
         },
-        aihubmix = {
-          model = "claude-3-7-sonnet-20250219",
+      },
+      rag_service = { -- RAG service configuration
+        enabled = true, -- Enables the RAG service
+        host_mount = os.getenv "HOME", -- Host mount path for the RAG service (Docker will mount this path)
+        runner = "docker", -- The runner for the RAG service (can use docker or nix)
+        llm = {
+          provider = "openai", -- The LLM provider ("openai")
+          endpoint = "https://api.openai.com/v1", -- The LLM API endpoint
+          api_key = "OPENAI_API_KEY", -- The environment variable name for the LLM API key
+          model = "gpt-4o-mini", -- The LLM model name (e.g., "gpt-4o-mini", "gpt-3.5-turbo")
+          -- extra = { -- Extra configuration options for the LLM (optional)
+          --   temperature = 0.7, -- Controls the randomness of the output. Lower values make it more deterministic.
+          --   max_tokens = 512, -- The maximum number of tokens to generate in the completion.
+          --   -- system_prompt = "You are a helpful assistant.", -- A system prompt to guide the model's behavior.
+          --   -- timeout = 120, -- Request timeout in seconds.
+          -- },
+        },
+        embed = {
+          provider = "openai", -- The Embedding provider ("openai")
+          endpoint = "https://api.openai.com/v1", -- The Embedding API endpoint
+          api_key = "OPENAI_API_KEY", -- The environment variable name for the Embedding API key
+          model = "text-embedding-3-large", -- The Embedding model name (e.g., "text-embedding-3-small", "text-embedding-3-large")
+          -- extra = { -- Extra configuration options for the Embedding model (optional)
+          --   dimensions = nil,
+          -- },
         },
       },
-      -- openai = {
-      --   endpoint = "https://api.openai.com/v1",
-      --   model = "o3-mini-2025-01-31", -- your desired model (or use gpt-4o, etc.)
-      --   timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-      --   temperature = 0,
-      --   max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-      --   --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-      -- },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
@@ -611,7 +628,7 @@ local plugins = {
       "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      -- "zbirenbaum/copilot.lua", -- for providers='copilot'
+      "zbirenbaum/copilot.lua", -- for providers='copilot'
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",
@@ -638,6 +655,18 @@ local plugins = {
         ft = { "markdown", "Avante" },
       },
     },
+  },
+  {
+    "yuchanns/phpfmt.nvim",
+    ft = { "php" },
+    config = function()
+      require("phpfmt").setup {
+        -- Default configs
+        cmd = "phpcbf",
+        standard = "PSR12",
+        auto_format = true,
+      }
+    end,
   },
 }
 
