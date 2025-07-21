@@ -7,10 +7,10 @@ local options = {
     scss = { "stylelint", "prettierd" },
     markdown = { "markdownlint", "mdformat" },
     yaml = { "yamlfix", "prettierd" },
-    typescript = { "eslint_d", "prettierd" },
-    typescriptreact = { "eslint_d", "prettierd" },
-    javascript = { "eslint_d", "prettierd" },
-    javascriptreact = { "eslint_d", "prettierd" },
+    typescript = { "prettierd", "eslint_d" },
+    typescriptreact = { "prettierd", "eslint_d" },
+    javascript = { "prettierd", "eslint_d" },
+    javascriptreact = { "prettierd", "eslint_d" },
     terraform = { "terraform_fmt" },
     python = { "ruff_format", "ruff_organize_imports", "ruff_fix" },
     sh = { "shellcheck", "shfmt" },
@@ -25,8 +25,8 @@ local options = {
   },
   format_on_save = {
     -- These options will be passed to conform.format()
-    timeout_ms = 500,
-    lsp_fallback = true,
+    timeout_ms = 1000,
+    lsp_format = "fallback",
   },
 }
 
