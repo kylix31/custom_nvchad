@@ -4,8 +4,11 @@ return {
     event = "VeryLazy",
     version = false, -- Never set this value to "*!" Never!
     debug = true,
-    -- commit = "ae06698c307f09dd979f4094458b16e12ab72351",
+    -- commit = "f4f82a09d749da0bcd736600e621b0ed2a089635",
     opts = {
+      behaviour = {
+        enable_fastapply = false, -- Enable Fast Apply feature
+      },
       -- System prompt using mcphub if available
       system_prompt = function()
         local hub = require("mcphub").get_hub_instance()
@@ -26,6 +29,9 @@ return {
       providers = {
         copilot = {
           model = "gpt-4.1",
+        },
+        morph = {
+          model = "auto",
         },
       },
       rag_service = {

@@ -39,8 +39,25 @@ map("n", "<leader>yt", ":set ft=yaml <CR>", { desc = "set filetype to yaml" })
 map("n", "sly", '"+yy', { desc = "system line yank" })
 map("n", "swy", '"+yiw', { desc = "system word yank" })
 map("v", "sy", '"+y', { desc = "system yank" })
-
+map("x", "<leader>ss", '"zy<Cmd>Telescope live_grep<CR><C-r>z', { desc = "grep selected text" })
+--
 -- Trouble mappings
 map("n", "<leader>tt", ":TroubleToggle <CR>", { desc = "toggle trouble" })
+
+-- LSP
+map("n", "<leader>ls", function()
+  vim.diagnostic.open_float()
+end, { desc = "LSP signature help" })
+map("n", "<leader>ca", function()
+  vim.lsp.buf.code_action()
+end, { desc = "LSP signature help" })
+
+-- Buffer management
+map("n", "<leader>xa", function()
+  require("nvchad.tabufline").closeAllBufs(true)
+end, { desc = "Close all buffers" })
+map("n", "<leader>xo", function()
+  require("nvchad.tabufline").closeAllBufs(false)
+end, { desc = "Close all other buffers" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
