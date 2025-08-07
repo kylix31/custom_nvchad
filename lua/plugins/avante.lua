@@ -7,7 +7,7 @@ return {
     -- commit = "f4f82a09d749da0bcd736600e621b0ed2a089635",
     opts = {
       behaviour = {
-        enable_fastapply = false, -- Enable Fast Apply feature
+        enable_fastapply = true, -- Enable Fast Apply feature
       },
       -- System prompt using mcphub if available
       system_prompt = function()
@@ -35,25 +35,24 @@ return {
         },
       },
       rag_service = {
-        enabled = false,
-        host_mount = os.getenv "HOME",
-        runner = "docker",
-        llm = {
-          provider = "ollama",
-          endpoint = "http://172.17.0.1:11434",
-          api_key = "",
-          model = "llama2",
-          extra = nil,
+        enabled = false, -- Enables the RAG service
+        host_mount = os.getenv "HOME", -- Host mount path for the rag service (Docker will mount this path)
+        runner = "docker", -- Runner for the RAG service (can use docker or nix)
+        llm = { -- Language Model (LLM) configuration for RAG service
+          provider = "openai", -- LLM provider
+          endpoint = "https://api.openai.com/v1", -- LLM API endpoint
+          api_key = "OPENAI_API_KEY", -- Environment variable name for the LLM API key
+          model = "gpt-4o-mini", -- LLM model name
+          extra = nil, -- Additional configuration options for LLM
         },
-        embed = {
-          provider = "ollama",
-          endpoint = "http://172.17.0.1:11434",
-          api_key = "",
-          model = "nomic-embed-text",
-          extra = {
-            embed_batch_size = 10,
-          },
+        embed = { -- Embedding model configuration for RAG service
+          provider = "openai", -- Embedding provider
+          endpoint = "https://api.openai.com/v1", -- Embedding API endpoint
+          api_key = "OPENAI_API_KEY", -- Environment variable name for the embedding API key
+          model = "text-embedding-3-large", -- Embedding model name
+          extra = nil, -- Additional configuration options for the embedding model
         },
+        docker_extra_args = "", -- Extra arguments to pass to the docker command
       },
       --[[
       behaviour = {
