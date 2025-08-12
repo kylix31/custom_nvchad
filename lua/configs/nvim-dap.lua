@@ -30,26 +30,13 @@ M.dap = function()
     host = "localhost",
     port = "${port}",
     executable = {
-      command = "node",
+      command = "js-debug-dap",
       -- 💀 Make sure to update this path to point to your installation
-      args = { "/usr/bin/js-debug-dap", "${port}" },
+      args = { "${port}" },
     },
   }
+
   dap.configurations.typescript = {
-    {
-      name = "Launch TypeScript with ts-node",
-      type = "pwa-node",
-      request = "launch",
-      runtimeArgs = { "-r", "ts-node/register" },
-      args = { "${file}" },
-      sourceMaps = true,
-      cwd = vim.fn.getcwd(),
-      protocol = "inspector",
-      resolveSourceMapLocations = {
-        "${workspaceFolder}/**",
-        "!**/node_modules/**",
-      },
-    },
     {
       name = "Docker: Attach to Node on Docker",
       type = "node2",
@@ -60,16 +47,21 @@ M.dap = function()
       trace = true,
     },
     {
-      name = "Launch Compiled JavaScript",
-      type = "pwa-node",
-      request = "launch",
-      program = "${file}",
+      name = "Attach to process",
+      type = "node2",
+      request = "attach",
+      processId = require("dap.utils").pick_process,
       cwd = "${workspaceFolder}",
-      sourceMaps = true,
-      -- resolveSourceMapLocations = {
-      --   "${workspaceFolder}/**",
-      --   "!**/node_modules/**",
-      -- },
+    },
+    {
+      name = "Attach to ts-node-dev",
+      type = "pwa-node", -- or "pwa-node" if using js-debug
+      request = "attach",
+      port = 9229, -- should match the port used by --inspect
+      address = "127.0.0.1",
+      restart = true, -- optional, helps handle ts-node-dev restarts
+      localRoot = "${workspaceFolder}",
+      remoteRoot = nil,
     },
   }
   dap.configurations.javascript = {
