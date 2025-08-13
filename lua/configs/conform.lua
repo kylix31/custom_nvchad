@@ -23,11 +23,12 @@ local options = {
       command = "hadolint --formatter diff -",
     },
   },
-  format_on_save = {
-    -- These options will be passed to conform.format()
-    timeout_ms = 1000,
-    lsp_format = "fallback",
-  },
+  format_on_save = function(bufnr)
+    if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+      return
+    end
+    return { timeout_ms = 1000, lsp_format = "fallback" }
+  end,
 }
 
 return options
