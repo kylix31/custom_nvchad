@@ -51,17 +51,6 @@ M.dap = function()
       type = "node2",
       request = "attach",
       processId = require("dap.utils").pick_process,
-      cwd = "${workspaceFolder}",
-    },
-    {
-      name = "Attach to ts-node-dev",
-      type = "pwa-node", -- or "pwa-node" if using js-debug
-      request = "attach",
-      port = 9229, -- should match the port used by --inspect
-      address = "127.0.0.1",
-      restart = true, -- optional, helps handle ts-node-dev restarts
-      localRoot = "${workspaceFolder}",
-      remoteRoot = nil,
     },
   }
   dap.configurations.javascript = {
