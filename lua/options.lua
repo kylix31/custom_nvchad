@@ -17,6 +17,8 @@ opt.updatetime = 100 -- Reduce delay for CursorHold and swap file events
 o.autoread = true -- Reload file automatically if changed externally
 wo.relativenumber = true -- Show relative line numbers in window
 
+opt.scrolloff = 8
+
 g.skip_ts_context_commentstring_module = true -- Disable Treesitter context commentstring module
 
 -- PLUGIN & FEATURE-SPECIFIC OPTIONS --

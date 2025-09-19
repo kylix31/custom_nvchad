@@ -60,4 +60,10 @@ map("n", "<leader>xo", function()
   require("nvchad.tabufline").closeAllBufs(false)
 end, { desc = "Close all other buffers" })
 
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+-- For yanky
+map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)", { desc = "yanky put after" })
+map({ "n", "x" }, "P", "<Plug>(YankyPutBefore)", { desc = "yanky put before" })
+map({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)", { desc = "yanky g put after" })
+map({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)", { desc = "yanky g put before" })
+map("n", "<c-p>", "<Plug>(YankyPreviousEntry)", { desc = "yanky previous entry" })
+map("n", "<c-n>", "<Plug>(YankyNextEntry)", { desc = "yanky next entry" })
