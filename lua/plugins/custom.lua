@@ -18,6 +18,7 @@ return {
     },
     ft = { "fugitive" },
   },
+
   {
     "folke/trouble.nvim",
     opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -55,6 +56,7 @@ return {
       },
     },
   },
+
   {
     "windwp/nvim-ts-autotag",
     ft = { "typescriptreact", "javascriptreact", "markdown", "html", "php" },
@@ -69,6 +71,7 @@ return {
       }
     end,
   },
+
   {
     "stevearc/aerial.nvim",
     ft = { "javascript", "typescript", "php", "typescriptreact", "javascriptreact", "python" },
@@ -93,6 +96,7 @@ return {
       require("nvim-surround").setup()
     end,
   },
+
   {
     "mfussenegger/nvim-dap",
     config = function()
@@ -114,6 +118,7 @@ return {
       },
     },
   },
+
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
     config = function()
@@ -171,6 +176,7 @@ return {
       require("dap-python").setup "/home/kylix/.virtualenvs/debugpy/bin/python"
     end,
   },
+
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -180,6 +186,7 @@ return {
     end,
     ft = { "markdown" },
   },
+
   {
     "romgrk/nvim-treesitter-context",
     dependencies = "nvim-treesitter/nvim-treesitter",
@@ -188,11 +195,13 @@ return {
     end,
     lazy = false,
   },
+
   {
     "gbprod/yanky.nvim",
     lazy = false,
     opts = {},
   },
+
   {
     "folke/snacks.nvim",
     priority = 1000,
