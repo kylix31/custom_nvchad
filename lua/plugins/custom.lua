@@ -173,7 +173,7 @@ return {
     "mfussenegger/nvim-dap-python",
     ft = { "python" },
     config = function()
-      require("dap-python").setup "/home/kylix/.virtualenvs/debugpy/bin/python"
+      require("dap-python").setup "uv"
     end,
   },
 
@@ -213,6 +213,7 @@ return {
       -- refer to the configuration section below
       bigfile = { enabled = true },
       indent = { enabled = true },
+      quickfile = { enabled = true },
     },
   },
 }

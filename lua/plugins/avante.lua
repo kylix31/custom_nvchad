@@ -35,7 +35,7 @@ return {
       provider = "copilot",
       providers = {
         copilot = {
-          model = "gpt-4.1",
+          model = "claude-sonnet-4.5",
         },
         morph = {
           model = "auto",
@@ -50,10 +50,22 @@ return {
             -- GEMINI_API_KEY = os.getenv "GEMINI_API_KEY",
           },
         },
+        ["goose"] = {
+          command = "goose",
+          args = { "acp" },
+        },
+        ["claude-code"] = {
+          command = "npx",
+          args = { "@zed-industries/claude-code-acp" },
+          env = {
+            NODE_NO_WARNINGS = "1",
+            ANTHROPIC_API_KEY = os.getenv "ANTHROPIC_API_KEY",
+          },
+        },
       },
       rag_service = {
         enabled = true,
-        host_mount = "/home/kylix/Handtalk",
+        host_mount = "/home/kylix/Handtalk/nmt",
         runner = "docker",
         llm = {
           provider = "ollama",
