@@ -12,45 +12,45 @@ vim.env.LAZY_STDPATH = ".repro"
 load(vim.fn.system "curl -s https://raw.githubusercontent.com/folke/lazy.nvim/main/bootstrap.lua")()
 
 -- Your CodeCompanion setup
-local plugins = {
-  {
-    "olimorris/codecompanion.nvim",
-    dependencies = {
-      { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-      { "nvim-lua/plenary.nvim" },
-      -- Test with blink.cmp (delete if not required)
-      {
-        "saghen/blink.cmp",
-        lazy = false,
-        version = "*",
-        opts = {
-          keymap = {
-            preset = "enter",
-            ["<S-Tab>"] = { "select_prev", "fallback" },
-            ["<Tab>"] = { "select_next", "fallback" },
-          },
-          cmdline = { sources = { "cmdline" } },
-          sources = {
-            default = { "lsp", "path", "buffer", "codecompanion" },
-          },
-        },
-      },
-      -- Test with nvim-cmp
-      -- { "hrsh7th/nvim-cmp" },
-    },
-    opts = {
-      --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
-      strategies = {
-        --NOTE: Change the adapter as required
-        chat = { adapter = "copilot" },
-        inline = { adapter = "copilot" },
-      },
-      opts = {
-        log_level = "DEBUG",
-      },
-    },
-  },
-}
+-- local plugins = {
+--   {
+--     "olimorris/codecompanion.nvim",
+--     dependencies = {
+--       { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+--       { "nvim-lua/plenary.nvim" },
+--       -- Test with blink.cmp (delete if not required)
+--       {
+--         "saghen/blink.cmp",
+--         lazy = false,
+--         version = "*",
+--         opts = {
+--           keymap = {
+--             preset = "enter",
+--             ["<S-Tab>"] = { "select_prev", "fallback" },
+--             ["<Tab>"] = { "select_next", "fallback" },
+--           },
+--           cmdline = { sources = { "cmdline" } },
+--           sources = {
+--             default = { "lsp", "path", "buffer", "codecompanion" },
+--           },
+--         },
+--       },
+--       -- Test with nvim-cmp
+--       -- { "hrsh7th/nvim-cmp" },
+--     },
+--     opts = {
+--       --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+--       strategies = {
+--         --NOTE: Change the adapter as required
+--         chat = { adapter = "copilot" },
+--         inline = { adapter = "copilot" },
+--       },
+--       opts = {
+--         log_level = "DEBUG",
+--       },
+--     },
+--   },
+-- }
 
 -- Leaving this comment in to see if the issue author notices ;-)
 -- This is so I can tell if they've really tested with their own minimal.lua file
