@@ -24,7 +24,7 @@ local servers = {
   "dockerls",
   "ruff",
   "bashls",
-  "copilot",
+  -- "copilot",
   -- "pylsp",
 }
 
