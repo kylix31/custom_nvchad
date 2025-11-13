@@ -16,7 +16,7 @@ local servers = {
   "terraformls",
   "prismals",
   -- "efm",
-  "phpactor",
+  -- "phpactor",
   "gopls",
   "taplo",
   "kotlin_language_server",
