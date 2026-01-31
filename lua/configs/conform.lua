@@ -16,6 +16,7 @@ local options = {
     sh = { "shellcheck", "shfmt" },
     dockerfile = { "hadolint" },
     proto = { "buf" },
+    ruby = { "rubocop" },
   },
   formatters = {
     hadolint = {

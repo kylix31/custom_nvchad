@@ -24,6 +24,8 @@ local servers = {
   "dockerls",
   "ruff",
   "bashls",
+  "ruby_lsp",
+  "rubocop",
   -- "copilot",
   -- "pylsp",
 }
