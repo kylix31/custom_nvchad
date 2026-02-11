@@ -225,6 +225,8 @@ return {
       bigfile = { enabled = true },
       indent = { enabled = true },
       quickfile = { enabled = true },
+      dim = {},
+      words = {},
       picker = {},
       explorer = {},
     },

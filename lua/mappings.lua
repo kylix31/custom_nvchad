@@ -49,6 +49,9 @@ end, { desc = "LSP signature help" })
 map("n", "<leader>ca", function()
   vim.lsp.buf.code_action()
 end, { desc = "LSP signature help" })
+map("n", "gi", function()
+  vim.lsp.buf.implementation()
+end, { desc = "LSP go to implementation" })
 
 -- Buffer management
 map("n", "<leader>xa", function()

@@ -70,35 +70,6 @@ M.dap = function()
       -- Required attributes by nvim-dap:
       type = "python", -- links this configuration to the nvim-dap-python adapter
       request = "launch",
-      name = "Launch FastAPI (GLaDOS)",
-
-      -- Launch uvicorn as a module:
-      module = "uvicorn",
-      args = {
-        "glados.main:app",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "8000",
-        -- Do not use "--reload" when debugging; reloading spawns a child process which
-        -- usually prevents the debugger from hitting breakpoints.
-      },
-      -- Set the working directory (adjust if needed)
-      cwd = vim.fn.getcwd(),
-
-      -- Optional: Specify which terminal to use:
-      -- console = "integratedTerminal",
-
-      -- (Optional) If you want to debug code in subprocesses:
-      -- subProcess = true,
-
-      -- (Optional) Set 'justMyCode' to false if you need to step into library code:
-      -- justMyCode = false,
-    },
-    {
-      -- Required attributes by nvim-dap:
-      type = "python", -- links this configuration to the nvim-dap-python adapter
-      request = "launch",
       name = "Launch FastAPI (general)",
 
       -- Launch uvicorn as a module:
@@ -109,35 +80,6 @@ M.dap = function()
         "0.0.0.0",
         "--port",
         "8000",
-        -- Do not use "--reload" when debugging; reloading spawns a child process which
-        -- usually prevents the debugger from hitting breakpoints.
-      },
-      -- Set the working directory (adjust if needed)
-      cwd = vim.fn.getcwd(),
-
-      -- Optional: Specify which terminal to use:
-      -- console = "integratedTerminal",
-
-      -- (Optional) If you want to debug code in subprocesses:
-      -- subProcess = true,
-
-      -- (Optional) Set 'justMyCode' to false if you need to step into library code:
-      -- justMyCode = false,
-    },
-    {
-      -- Required attributes by nvim-dap:
-      type = "python", -- links this configuration to the nvim-dap-python adapter
-      request = "launch",
-      name = "Launch Vertex NMT",
-
-      -- Launch uvicorn as a module:
-      module = "uvicorn",
-      args = {
-        "nmt.vertex.prediction_server:app",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "8080",
         -- Do not use "--reload" when debugging; reloading spawns a child process which
         -- usually prevents the debugger from hitting breakpoints.
       },

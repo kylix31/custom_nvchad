@@ -16,6 +16,7 @@ opt.clipboard = "unnamed" -- Use system clipboard for copy/paste
 opt.updatetime = 100 -- Reduce delay for CursorHold and swap file events
 o.autoread = true -- Reload file automatically if changed externally
 wo.relativenumber = true -- Show relative line numbers in window
+opt.swapfile = false
 
 opt.scrolloff = 8
 

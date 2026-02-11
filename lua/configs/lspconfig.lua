@@ -31,7 +31,7 @@ local servers = {
   "jdtls",
 
   -- Kotlin
-  "kotlin_language_server",
+  "kotlin_lsp",
 
   -- Ruby
   "ruby_lsp",
