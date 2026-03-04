@@ -103,6 +103,7 @@ return {
       require("configs.nvim-dap").dap()
     end,
     dependencies = {
+      "suketa/nvim-dap-ruby",
       {
         "rcarriga/nvim-dap-ui",
         config = function()
@@ -341,16 +342,6 @@ return {
     "gennaro-tedesco/nvim-jqx",
     event = { "BufReadPost" },
     ft = { "json", "yaml" },
-  },
-  {
-    "mfussenegger/nvim-dap",
-    ft = { "ruby" },
-    dependencies = {
-      "suketa/nvim-dap-ruby",
-    },
-    config = function()
-      require("dap-ruby").setup()
-    end,
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",

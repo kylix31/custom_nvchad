@@ -56,6 +56,7 @@ M.dap = function()
       processId = require("dap.utils").pick_process,
     },
   }
+
   dap.configurations.javascript = {
     {
       name = "Launch file",
@@ -65,6 +66,7 @@ M.dap = function()
       cwd = "${workspaceFolder}",
     },
   }
+
   dap.configurations.python = {
     {
       -- Required attributes by nvim-dap:
@@ -94,6 +96,24 @@ M.dap = function()
 
       -- (Optional) Set 'justMyCode' to false if you need to step into library code:
       -- justMyCode = false,
+    },
+  }
+
+  -- Ruby adapter setup (must be done before configurations)
+  require("dap-ruby").setup()
+
+  dap.configurations.ruby = {
+    {
+      type = "ruby",
+      name = "Attach to Sidekiq (Docker Whisper)",
+      request = "attach",
+      port = 38698,
+      host = "127.0.0.1",
+      waiting = 0, -- Don't wait for rdbg to launch (it's already running in Docker)
+      options = { source_filetype = "ruby" },
+      -- localfsMap is rdbg-specific: maps container paths to host paths
+      -- Format: "/container_path:/host_path" (rdbg ignores localRoot/remoteRoot)
+      localfsMap = "/app:" .. vim.fn.getcwd(),
     },
   }
 end

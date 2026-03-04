@@ -80,14 +80,12 @@ local servers = {
 --   filetypes = configs.vue.filetypes,
 -- })
 
---   vim.lsp.config("ts_ls", {
---     init_options = {
---       plugins = { vue_plugin },
---     },
---     filetypes = configs.vue.filetypes,
---   })
---
---   vim.lsp.config("vue_ls", {})
+-- vim.lsp.config("ts_ls", {
+--   init_options = {
+--     plugins = { vue_plugin },
+--   },
+--   filetypes = configs.vue.filetypes,
+-- })
 -- end
 
 -- setup_vue_typescript()
