@@ -59,14 +59,14 @@ return {
 
   {
     "windwp/nvim-ts-autotag",
-    ft = { "typescriptreact", "javascriptreact", "markdown", "html", "php" },
+    ft = { "typescriptreact", "javascriptreact", "markdown", "html", "php", "vue" },
     config = function()
       require("nvim-ts-autotag").setup {
         opts = {
           -- Defaults
           enable_close = true, -- Auto close tags
           enable_rename = true, -- Auto rename pairs of tags
-          enable_close_on_slash = true, -- Auto close on trailing </
+          enable_close_on_slash = false, -- Auto close on trailing </
         },
       }
     end,
@@ -395,5 +395,29 @@ return {
     config = function()
       -- put your config here
     end,
+  },
+  {
+    "andymass/vim-matchup",
+    lazy = false,
+    init = function()
+      -- modify your configuration vars here
+      vim.g.matchup_treesitter_stopline = 500
+
+      -- or call the setup function provided as a helper. It defines the
+      -- configuration vars for you
+      require("match-up").setup {
+        treesitter = {
+          stopline = 500,
+        },
+      }
+    end,
+    -- or use the `opts` mechanism built into `lazy.nvim`. It calls
+    -- `require('match-up').setup` under the hood
+    ---@type matchup.Config
+    opts = {
+      treesitter = {
+        stopline = 500,
+      },
+    },
   },
 }

@@ -89,6 +89,59 @@ local servers = {
 -- end
 
 -- setup_vue_typescript()
+
+vim.lsp.config("tailwindcss", {
+  filetypes = {
+    "aspnetcorerazor",
+    "astro",
+    "astro-markdown",
+    "blade",
+    "clojure",
+    "django-html",
+    "htmldjango",
+    "edge",
+    "eelixir",
+    "elixir",
+    "ejs",
+    "erb",
+    "eruby",
+    "gohtml",
+    "gohtmltmpl",
+    "haml",
+    "handlebars",
+    "hbs",
+    "html",
+    "htmlangular",
+    "html-eex",
+    "heex",
+    "jade",
+    "leaf",
+    "liquid",
+    "njk",
+    "nunjucks",
+    "php",
+    "razor",
+    "slim",
+    "twig",
+    "css",
+    "less",
+    "postcss",
+    "sass",
+    "scss",
+    "stylus",
+    "sugarss",
+    "javascript",
+    "javascriptreact",
+    "reason",
+    "rescript",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "svelte",
+    "templ",
+  },
+})
+
 vim.lsp.enable(servers)
 
 -- read :h vim.lsp.config for changing options of lsp servers
