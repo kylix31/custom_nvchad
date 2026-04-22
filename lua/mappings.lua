@@ -11,6 +11,20 @@ map("n", "<leader>gl", ":diffget //3 <CR>", { desc = "git diff" })
 map("n", "<leader>gs", ":Git <CR>", { desc = "git" })
 map("n", "<leader>gb", ":Git blame <CR>", { desc = "git blame" })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "fugitive",
+  callback = function(ev)
+    vim.keymap.set("n", "gj", function()
+      vim.cmd('execute "normal \\<CR>"')
+      local fpath = vim.fn.expand("%:p")
+      local real = vim.fn["fugitive#Real"](fpath)
+      if real == "" or real == fpath then return end
+      local lnum = vim.fn.line(".")
+      vim.cmd(string.format("edit +%d %s", lnum, vim.fn.fnameescape(real)))
+    end, { buffer = ev.buf, desc = "Jump to work tree at hunk line" })
+  end,
+})
+
 -- DAP mappings
 map("n", "<F5>", function()
   require("dap").continue()
