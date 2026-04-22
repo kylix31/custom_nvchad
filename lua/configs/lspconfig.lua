@@ -19,6 +19,7 @@ local servers = {
   "ts_ls",
   "eslint",
   "vue_ls",
+  "biome",
 
   -- Python
   "pyright",
@@ -31,11 +32,11 @@ local servers = {
   "jdtls",
 
   -- Kotlin
-  "kotlin_lsp",
+  -- "kotlin_lsp",
 
   -- Ruby
   "ruby_lsp",
-  "rubocop",
+  -- "rubocop",
 
   -- Data/Config
   "yamlls",
@@ -46,7 +47,8 @@ local servers = {
 
   -- Infrastructure
   "terraformls",
-  "dockerls",
+  "docker_language_server",
+  "docker_compose_language_service",
   "bashls",
 
   -- Database
