@@ -8,6 +8,16 @@ return {
         backend = "zellij",
         enabled = true,
       },
+      tools = {
+        claude_serena = {
+          cmd = {
+            "sh",
+            "-c",
+            'claude --append-system-prompt="$(serena prompts print-cc-system-prompt-override)"',
+          },
+          url = "https://github.com/anthropics/claude-code",
+        },
+      },
     },
   },
   keys = {
@@ -90,6 +100,13 @@ return {
         require("sidekick.cli").toggle { name = "claude", focus = true }
       end,
       desc = "Sidekick Toggle Claude",
+    },
+    {
+      "<leader>aS",
+      function()
+        require("sidekick.cli").toggle { name = "claude_serena", focus = true }
+      end,
+      desc = "Sidekick Toggle Claude (Serena prompt)",
     },
   },
 }
