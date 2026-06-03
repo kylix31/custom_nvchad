@@ -1,6 +1,7 @@
 require "nvchad.mappings"
 
 local map = vim.keymap.set
+local nomap = vim.keymap.del
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
@@ -15,11 +16,13 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "fugitive",
   callback = function(ev)
     vim.keymap.set("n", "gj", function()
-      vim.cmd('execute "normal \\<CR>"')
-      local fpath = vim.fn.expand("%:p")
+      vim.cmd 'execute "normal \\<CR>"'
+      local fpath = vim.fn.expand "%:p"
       local real = vim.fn["fugitive#Real"](fpath)
-      if real == "" or real == fpath then return end
-      local lnum = vim.fn.line(".")
+      if real == "" or real == fpath then
+        return
+      end
+      local lnum = vim.fn.line "."
       vim.cmd(string.format("edit +%d %s", lnum, vim.fn.fnameescape(real)))
     end, { buffer = ev.buf, desc = "Jump to work tree at hunk line" })
   end,
@@ -51,7 +54,9 @@ map("n", "<leader>yt", ":set ft=yaml <CR>", { desc = "set filetype to yaml" })
 map("n", "sly", '"+yy', { desc = "system line yank" })
 map("n", "swy", '"+yiw', { desc = "system word yank" })
 map("v", "sy", '"+y', { desc = "system yank" })
-map("x", "<leader>ss", '"zy<Cmd>Telescope live_grep<CR><C-r>z', { desc = "grep selected text" })
+map("x", "<leader>ss", function()
+  require("fzf-lua").grep_visual()
+end, { desc = "grep selected text" })
 --
 -- Trouble mappings
 map("n", "<leader>tt", ":TroubleToggle <CR>", { desc = "toggle trouble" })
@@ -82,3 +87,7 @@ map({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)", { desc = "yanky g put after" }
 map({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)", { desc = "yanky g put before" })
 map("n", "<a-p>", "<Plug>(YankyPreviousEntry)", { desc = "yanky previous entry" })
 map("n", "<a-n>", "<Plug>(YankyNextEntry)", { desc = "yanky next entry" })
+
+-- Disable default mappings
+nomap("n", "<leader>fw")
+map("n", "<leader>fw", ":FzfLua live_grep<CR>", { desc = "ultra kill super grep" })
