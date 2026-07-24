@@ -487,7 +487,17 @@ return {
         --   Linux:   "/usr/lib/jvm/java-17-openjdk"
         --   Windows: "C:\\Program Files\\Java\\jdk-17"
         --   SDKMAN:  os.getenv("HOME") .. "/.sdkman/candidates/java/17.0.8-tem"
-        jdk_for_symbol_resolution = "/home/kylix/.jdks/ms-11.0.30", -- Auto-detect from project
+        -- jenv-aware: resolve JDK home from `jenv javahome` (respects per-project
+        -- .java-version when nvim is opened inside the project). jenv shims are NOT
+        -- valid here -- kotlin-lsp needs a real JAVA_HOME dir containing bin/java.
+        -- Falls back to system LTS 21 when jenv global is `system` (no JAVA_HOME).
+        jdk_for_symbol_resolution = (function()
+          local home = vim.trim(vim.fn.system "jenv javahome 2>/dev/null")
+          if vim.v.shell_error == 0 and vim.fn.isdirectory(home) == 1 then
+            return home
+          end
+          return "/usr/lib/jvm/java-21-openjdk"
+        end)(),
 
         -- Optional: Specify additional JVM arguments for the kotlin-lsp server
         jvm_args = {
