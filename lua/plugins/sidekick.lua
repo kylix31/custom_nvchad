@@ -9,11 +9,11 @@ return {
         enabled = true,
       },
       tools = {
-        claude_serena = {
+        claude_danger = {
           cmd = {
             "sh",
             "-c",
-            'claude --append-system-prompt="$(serena prompts print-cc-system-prompt-override)"',
+            "claude --dangerously-skip-permissions",
           },
           url = "https://github.com/anthropics/claude-code",
         },
