@@ -453,6 +453,8 @@ return {
       "trouble.nvim",
     },
     config = function()
+      -- shortcut: manual kotlin-lsp install while mason-registry#17523 is open; drop after :MasonInstall kotlin-lsp works
+      vim.env.KOTLIN_LSP_DIR = vim.fn.stdpath "data" .. "/kotlin-lsp"
       require("kotlin").setup {
         -- Optional: Specify root markers for multi-module projects
         -- Default: { "build.gradle", "build.gradle.kts", "pom.xml", "mvnw" }

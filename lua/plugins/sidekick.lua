@@ -20,6 +20,12 @@ return {
       },
     },
   },
+  config = function(_, opts)
+    require("sidekick").setup(opts)
+    if vim.fn.executable "herdr" == 1 then
+      require("sidekick.cli.session").register("herdr", require "configs.sidekick_herdr")
+    end
+  end,
   keys = {
     {
       "<c-a>",
